@@ -191,7 +191,7 @@ const PropertyListingsPage = () => {
   }, [priceRange, selectedLocation, selectedType, beds, baths, searchQuery]);
 
   const FilterSection = () => (
-    <div className="bg-white p-6 rounded shadow-md mb-6">
+    <div className="bg-white p-6 rounded shadow-md lg:sticky lg:top-24 lg:h-[calc(100vh-120px)] lg:overflow-y-auto">
       <div className="flex justify-between items-center mb-4">
         <h3 className="text-lg font-bold">Filters</h3>
         <div className="flex gap-2">
@@ -215,7 +215,7 @@ const PropertyListingsPage = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-6">
         {/* Search */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -278,7 +278,7 @@ const PropertyListingsPage = () => {
         </div>
 
         {/* Price Range Filter */}
-        <div className="md:col-span-2 lg:col-span-1">
+        <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Price Range: {formatPrice(priceRange[0])} -{" "}
             {formatPrice(priceRange[1])}
@@ -294,49 +294,51 @@ const PropertyListingsPage = () => {
         </div>
 
         {/* Beds & Baths Filters */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Beds
-          </label>
-          <Select
-            value={beds.toString()}
-            onValueChange={(val) => setBeds(parseInt(val))}
-          >
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder="Any" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectItem value="0">Any</SelectItem>
-                <SelectItem value="1">1+</SelectItem>
-                <SelectItem value="2">2+</SelectItem>
-                <SelectItem value="3">3+</SelectItem>
-                <SelectItem value="4">4+</SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-        </div>
+        <div className="grid grid-cols-2 lg:grid-cols-1 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Beds
+            </label>
+            <Select
+              value={beds.toString()}
+              onValueChange={(val) => setBeds(parseInt(val))}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Any" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectItem value="0">Any</SelectItem>
+                  <SelectItem value="1">1+</SelectItem>
+                  <SelectItem value="2">2+</SelectItem>
+                  <SelectItem value="3">3+</SelectItem>
+                  <SelectItem value="4">4+</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Baths
-          </label>
-          <Select
-            value={baths.toString()}
-            onValueChange={(val) => setBaths(parseInt(val))}
-          >
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder="Any" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectItem value="0">Any</SelectItem>
-                <SelectItem value="1">1+</SelectItem>
-                <SelectItem value="2">2+</SelectItem>
-                <SelectItem value="3">3+</SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Baths
+            </label>
+            <Select
+              value={baths.toString()}
+              onValueChange={(val) => setBaths(parseInt(val))}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Any" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectItem value="0">Any</SelectItem>
+                  <SelectItem value="1">1+</SelectItem>
+                  <SelectItem value="2">2+</SelectItem>
+                  <SelectItem value="3">3+</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
       </div>
     </div>
@@ -345,12 +347,12 @@ const PropertyListingsPage = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-blue-100 to-indigo-50 text-primary py-16 px-4">
+      <div className="bg-gradient-to-r from-blue-100 to-indigo-50 text-primary pt-16 pb-4 px-4">
         <div className="max-w-7xl mx-auto">
-          <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4">
+          <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-2">
             Find Your Dream Property
           </h1>
-          <p className="text-base md:text-lg text-slate-800 mb-3">
+          <p className="text-base md:text-lg text-slate-800 mb-1.5">
             Discover premium homes and apartments tailored to your lifestyle
           </p>
 
@@ -370,104 +372,34 @@ const PropertyListingsPage = () => {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* Mobile filter toggle */}
-        <div className="lg:hidden mb-6 flex items-center gap-4">
-          <Button
-            onClick={() => setShowFilters(!showFilters)}
-            className="flex items-center gap-2 bg-blue-600 cursor-pointer hover:bg-blue-700 text-white px-6 py-3 rounded shadow-md"
-          >
-            <FiFilter size={18} /> Filters
-            {hasActiveFilters && (
-              <span className="ml-1 inline-flex items-center justify-center w-5 h-5 text-xs font-bold bg-white text-blue-600 rounded-full">
-                !
-              </span>
-            )}
-          </Button>
-
-          <div className="flex-1 flex justify-end">
-            <div className="flex items-center gap-1 bg-gray-100 p-1 rounded">
-              <button
-                onClick={() => setViewMode("grid")}
-                className={`p-2 rounded cursor-pointer ${
-                  viewMode === "grid"
-                    ? "bg-white shadow-sm text-blue-600"
-                    : "text-gray-600 hover:text-gray-800"
-                }`}
-                aria-label="Grid view"
-              >
-                <FiGrid size={18} />
-              </button>
-              <button
-                onClick={() => setViewMode("list")}
-                className={`p-2 rounded cursor-pointer ${
-                  viewMode === "list"
-                    ? "bg-white shadow-sm text-blue-600"
-                    : "text-gray-600 hover:text-gray-800"
-                }`}
-                aria-label="List view"
-              >
-                <FiList size={18} />
-              </button>
-            </div>
+      <div className="max-w-7xl mx-auto px-0 py-3">
+        <div className="flex flex-col lg:flex-row gap-8">
+          {/* Filters Section - Sticky on desktop */}
+          <div className={`lg:block hidden lg:w-72`}>
+            <FilterSection />
           </div>
-        </div>
 
-        {/* Show filters on mobile when toggled */}
-        {(showFilters || isLarge) && <FilterSection />}
-
-        {/* Main Content Area */}
-        <div>
-          {/* Results Summary and Controls */}
-          <div className="bg-white p-5 rounded shadow-md mb-8">
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-              <div>
-                <h2 className="text-xl font-bold text-gray-800">
-                  {isLoading ? (
-                    <Skeleton className="h-6 w-32" />
-                  ) : (
-                    `${filteredProperties.length} ${
-                      filteredProperties.length === 1
-                        ? "Property"
-                        : "Properties"
-                    } Found`
-                  )}
-                </h2>
-                <p className="text-gray-600 text-sm">
-                  {selectedLocation && `in ${selectedLocation}`}
-                  {selectedType && ` • ${selectedType}`}
-                  {beds > 0 && ` • ${beds}+ beds`}
-                  {baths > 0 && ` • ${baths}+ baths`}
-                </p>
-              </div>
-
-              <div className="flex items-center gap-4">
-                <div className="flex items-center gap-2">
-                  <span className="text-gray-700 hidden sm:block">
-                    Sort by:
+          {/* Main Content Area */}
+          <div className="flex-1">
+            {/* Mobile filter toggle */}
+            <div className="lg:hidden mb-6 flex items-center gap-4">
+              <Button
+                onClick={() => setShowFilters(!showFilters)}
+                className="flex items-center gap-2 bg-blue-600 cursor-pointer hover:bg-blue-700 text-white px-6 py-3 rounded shadow-md"
+              >
+                <FiFilter size={18} /> Filters
+                {hasActiveFilters && (
+                  <span className="ml-1 inline-flex items-center justify-center w-5 h-5 text-xs font-bold bg-white text-blue-600 rounded-full">
+                    !
                   </span>
-                  <Select value={sortOption} onValueChange={setSortOption}>
-                    <SelectTrigger className="w-[180px]">
-                      <SelectValue placeholder="Sort Listings" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        <SelectItem value="newest">Newest Listings</SelectItem>
-                        <SelectItem value="price-low-high">
-                          Price: Low to High
-                        </SelectItem>
-                        <SelectItem value="price-high-low">
-                          Price: High to Low
-                        </SelectItem>
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                </div>
+                )}
+              </Button>
 
-                <div className="hidden lg:flex items-center gap-1 bg-gray-100 p-1 rounded">
+              <div className="flex-1 flex justify-end">
+                <div className="flex items-center gap-1 bg-gray-100 p-1 rounded">
                   <button
                     onClick={() => setViewMode("grid")}
-                    className={`p-2 cursor-pointer rounded ${
+                    className={`p-2 rounded cursor-pointer ${
                       viewMode === "grid"
                         ? "bg-white shadow-sm text-blue-600"
                         : "text-gray-600 hover:text-gray-800"
@@ -478,7 +410,7 @@ const PropertyListingsPage = () => {
                   </button>
                   <button
                     onClick={() => setViewMode("list")}
-                    className={`p-2 cursor-pointer rounded ${
+                    className={`p-2 rounded cursor-pointer ${
                       viewMode === "list"
                         ? "bg-white shadow-sm text-blue-600"
                         : "text-gray-600 hover:text-gray-800"
@@ -490,58 +422,140 @@ const PropertyListingsPage = () => {
                 </div>
               </div>
             </div>
-          </div>
-
-          {/* Property Listings */}
-          {isLoading ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {Array.from({ length: 6 }).map((_, index) => (
-                <Skeleton key={index} className="h-96 w-full rounded" />
-              ))}
+            <div
+              className={`${
+                showFilters || isLarge ? "block" : "hidden"
+              } lg:hidden lg:w-72`}
+            >
+              <FilterSection />
             </div>
-          ) : filteredProperties.length === 0 ? (
-            <div className="bg-white p-12 rounded shadow-md text-center">
-              <div className="max-w-md mx-auto">
-                <FiHome className="mx-auto text-gray-300 text-5xl mb-4" />
-                <h3 className="text-xl font-medium text-gray-700 mb-2">
-                  No properties found
-                </h3>
-                <p className="text-gray-500 mb-6">
-                  We couldn't find any properties matching your criteria.
-                </p>
-                <Button
-                  onClick={resetFilters}
-                  className="px-6 cursor-pointer py-2 bg-blue-600 hover:bg-blue-700 text-white rounded transition"
-                >
-                  Reset Filters
-                </Button>
+            {/* Results Summary and Controls */}
+            <div className="bg-white p-5 rounded shadow-md mb-8">
+              <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                  <h2 className="text-xl font-bold text-gray-800">
+                    {isLoading ? (
+                      <Skeleton className="h-6 w-32" />
+                    ) : (
+                      `${filteredProperties.length} ${
+                        filteredProperties.length === 1
+                          ? "Property"
+                          : "Properties"
+                      } Found`
+                    )}
+                  </h2>
+                  <p className="text-gray-600 text-sm">
+                    {selectedLocation && `in ${selectedLocation}`}
+                    {selectedType && ` • ${selectedType}`}
+                    {beds > 0 && ` • ${beds}+ beds`}
+                    {baths > 0 && ` • ${baths}+ baths`}
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-2">
+                    <span className="text-gray-700 hidden sm:block">
+                      Sort by:
+                    </span>
+                    <Select value={sortOption} onValueChange={setSortOption}>
+                      <SelectTrigger className="w-[180px]">
+                        <SelectValue placeholder="Sort Listings" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectItem value="newest">
+                            Newest Listings
+                          </SelectItem>
+                          <SelectItem value="price-low-high">
+                            Price: Low to High
+                          </SelectItem>
+                          <SelectItem value="price-high-low">
+                            Price: High to Low
+                          </SelectItem>
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="hidden lg:flex items-center gap-1 bg-gray-100 p-1 rounded">
+                    <button
+                      onClick={() => setViewMode("grid")}
+                      className={`p-2 cursor-pointer rounded ${
+                        viewMode === "grid"
+                          ? "bg-white shadow-sm text-blue-600"
+                          : "text-gray-600 hover:text-gray-800"
+                      }`}
+                      aria-label="Grid view"
+                    >
+                      <FiGrid size={18} />
+                    </button>
+                    <button
+                      onClick={() => setViewMode("list")}
+                      className={`p-2 cursor-pointer rounded ${
+                        viewMode === "list"
+                          ? "bg-white shadow-sm text-blue-600"
+                          : "text-gray-600 hover:text-gray-800"
+                      }`}
+                      aria-label="List view"
+                    >
+                      <FiList size={18} />
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
-          ) : viewMode === "grid" ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredProperties.map((property) => (
-                <PropertyCard
-                  key={property.id}
-                  property={property}
-                  formatPrice={formatPrice}
-                  isFavorite={favorites.includes(property.id)}
-                  onToggleFavorite={toggleFavorite}
-                />
-              ))}
-            </div>
-          ) : (
-            <div className="space-y-6">
-              {filteredProperties.map((property) => (
-                <PropertyListCard
-                  key={property.id}
-                  property={property}
-                  formatPrice={formatPrice}
-                  isFavorite={favorites.includes(property.id)}
-                  onToggleFavorite={toggleFavorite}
-                />
-              ))}
-            </div>
-          )}
+
+            {/* Property Listings */}
+            {isLoading ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {Array.from({ length: 6 }).map((_, index) => (
+                  <Skeleton key={index} className="h-96 w-full rounded" />
+                ))}
+              </div>
+            ) : filteredProperties.length === 0 ? (
+              <div className="bg-white p-12 rounded shadow-md text-center">
+                <div className="max-w-md mx-auto">
+                  <FiHome className="mx-auto text-gray-300 text-5xl mb-4" />
+                  <h3 className="text-xl font-medium text-gray-700 mb-2">
+                    No properties found
+                  </h3>
+                  <p className="text-gray-500 mb-6">
+                    We couldn't find any properties matching your criteria.
+                  </p>
+                  <Button
+                    onClick={resetFilters}
+                    className="px-6 cursor-pointer py-2 bg-blue-600 hover:bg-blue-700 text-white rounded transition"
+                  >
+                    Reset Filters
+                  </Button>
+                </div>
+              </div>
+            ) : viewMode === "grid" ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredProperties.map((property) => (
+                  <PropertyCard
+                    key={property.id}
+                    property={property}
+                    formatPrice={formatPrice}
+                    isFavorite={favorites.includes(property.id)}
+                    onToggleFavorite={toggleFavorite}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="space-y-6">
+                {filteredProperties.map((property) => (
+                  <PropertyListCard
+                    key={property.id}
+                    property={property}
+                    formatPrice={formatPrice}
+                    isFavorite={favorites.includes(property.id)}
+                    onToggleFavorite={toggleFavorite}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
