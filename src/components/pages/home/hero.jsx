@@ -191,7 +191,7 @@ export function ModernHero() {
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: direction > 0 ? -100 : 100 }}
           transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
-          className="absolute inset-0 z-0 touch-none"
+          className="absolute inset-0 z-0 object-cover touch-none"
           style={{
             backgroundImage: `url(${slides[index].image})`,
             backgroundSize: "cover",
@@ -293,12 +293,12 @@ export function ModernHero() {
         {/* Thumbnail Navigation */}
         <div
           ref={thumbnailContainerRef}
-          className="mt-8 w-1/2 md:block hidden overflow-x-auto pb-2 scrollbar-hide relative"
+          className="w-1/2 md:block hidden overflow-x-auto pb-2 scrollbar-hide relative"
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
           <div
             ref={thumbnailListRef}
-            className="flex space-x-3 mx-auto w-max px-[50%]"
+            className="flex space-x-3 p-1 mx-auto w-max px-[50%]"
           >
             {propertySlides.map((slide, i) => {
               // Find the current position of this slide in our rotated array
@@ -309,8 +309,8 @@ export function ModernHero() {
                 <button
                   key={slide.id}
                   onClick={() => goToSlide(i)}
-                  className={`flex-shrink-0 relative group transition-all duration-300 ${
-                    isActive ? "scale-110" : "scale-100"
+                  className={`flex-shrink-0 m-1 relative group transition-all rounded-sm duration-300 ${
+                    isActive ? "scale-105 ring-2 ring-blue-600" : "scale-100"
                   }`}
                   aria-label={`Go to slide ${i + 1}`}
                 >
@@ -318,10 +318,10 @@ export function ModernHero() {
                     <img
                       src={slide.image}
                       alt=""
-                      className={`w-full h-full object-cover transition-all duration-300 ${
+                      className={`w-full h-full object-cover transition-all border-none duration-300 ${
                         isActive
-                          ? "opacity-100 brightness-100 border-2 border-gold-400"
-                          : "opacity-60 brightness-75 group-hover:opacity-80 border border-transparent"
+                          ? "opacity-100 brightness-100"
+                          : "opacity-60 brightness-75 group-hover:opacity-80"
                       }`}
                     />
                   </div>

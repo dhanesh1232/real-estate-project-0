@@ -72,100 +72,71 @@ const Header = () => {
                   onMouseEnter={() => setHoveredItem("properties")}
                   onMouseLeave={() => setHoveredItem(null)}
                 >
-                  <NavigationMenuTrigger className="bg-transparent hover:bg-transparent text-gray-700 hover:text-gold-600 px-3 py-2 font-medium tracking-wide transition-colors duration-300">
+                  {/* <NavigationMenuTrigger className="bg-transparent hover:bg-transparent text-gray-700 hover:text-gold-600 px-3 py-2 font-medium tracking-wide transition-colors duration-300">
                     <span className="relative">Properties</span>
                   </NavigationMenuTrigger>
                   <NavigationMenuContent className="shadow-xl rounded-none mt-2">
-                    <ul className="w-[240px] p-4 space-y-3">
+                    <ul className="w-[240px] p-2 space-y-3">
+                      <li>
+                        <NavigationMenuLink
+                          href="/properties"
+                          className="group p-2 hover:bg-gray-50 transition-colors"
+                        >
+                          <p className="font-medium text-gray-900 group-hover:text-gold-600">
+                            All Properties
+                          </p>
+                          <span className="text-sm text-gray-500">
+                            Explore all properties
+                          </span>
+                        </NavigationMenuLink>
+                      </li>
                       <li>
                         <NavigationMenuLink
                           href="/luxury-homes"
-                          className="group flex flex-row items-center p-3 hover:bg-gray-50 transition-colors"
+                          className="group p-2 hover:bg-gray-50 transition-colors"
                         >
-                          <div className="mr-3 text-gold-600">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              className="h-5 w-5"
-                              viewBox="0 0 20 20"
-                              fill="currentColor"
-                            >
-                              <path
-                                fillRule="evenodd"
-                                d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 0v12h8V4H6z"
-                                clipRule="evenodd"
-                              />
-                            </svg>
-                          </div>
-                          <div>
-                            <div className="font-medium text-gray-900 group-hover:text-gold-600">
-                              Luxury Homes
-                            </div>
-                            <div className="text-sm text-gray-500">
-                              Exclusive residences
-                            </div>
-                          </div>
+                          <p className="font-medium text-gray-900 group-hover:text-gold-600">
+                            Luxury Homes
+                          </p>
+                          <span className="text-sm text-gray-500">
+                            Exclusive residences
+                          </span>
                         </NavigationMenuLink>
                       </li>
                       <li>
                         <NavigationMenuLink
                           href="/penthouses"
-                          className="group flex flex-row items-center p-3 hover:bg-gray-50 transition-colors"
+                          className="group p-2 hover:bg-gray-50 transition-colors"
                         >
-                          <div className="mr-3 text-gold-600">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              className="h-5 w-5"
-                              viewBox="0 0 20 20"
-                              fill="currentColor"
-                            >
-                              <path
-                                fillRule="evenodd"
-                                d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 0v12h8V4H6z"
-                                clipRule="evenodd"
-                              />
-                            </svg>
-                          </div>
-                          <div>
-                            <div className="font-medium text-gray-900 group-hover:text-gold-600">
-                              Penthouses
-                            </div>
-                            <div className="text-sm text-gray-500">
-                              Sky-high luxury
-                            </div>
-                          </div>
+                          <p className="font-medium text-gray-900 group-hover:text-gold-600">
+                            Penthouses
+                          </p>
+                          <span className="text-sm text-gray-500">
+                            Sky-high luxury
+                          </span>
                         </NavigationMenuLink>
                       </li>
                       <li>
                         <NavigationMenuLink
                           href="/estates"
-                          className="group flex flex-row items-center p-3 hover:bg-gray-50 transition-colors"
+                          className="group p-2 hover:bg-gray-50 transition-colors"
                         >
-                          <div className="mr-3 text-gold-600">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              className="h-5 w-5"
-                              viewBox="0 0 20 20"
-                              fill="currentColor"
-                            >
-                              <path
-                                fillRule="evenodd"
-                                d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 0v12h8V4H6z"
-                                clipRule="evenodd"
-                              />
-                            </svg>
-                          </div>
-                          <div>
-                            <div className="font-medium text-gray-900 group-hover:text-gold-600">
-                              Private Estates
-                            </div>
-                            <div className="text-sm text-gray-500">
-                              Secluded grandeur
-                            </div>
-                          </div>
+                          <p className="font-medium text-gray-900 group-hover:text-gold-600">
+                            Private Estates
+                          </p>
+                          <span className="text-sm text-gray-500">
+                            Secluded grandeur
+                          </span>
                         </NavigationMenuLink>
                       </li>
                     </ul>
-                  </NavigationMenuContent>
+                  </NavigationMenuContent> */}
+                  <NavigationMenuLink
+                    href="/properties"
+                    className="px-3 py-2 text-gray-700 hover:text-gold-600 font-medium tracking-wide transition-colors duration-300 relative"
+                  >
+                    <span>Properties</span>
+                  </NavigationMenuLink>
                 </NavigationMenuItem>
 
                 <NavigationMenuItem
@@ -196,7 +167,7 @@ const Header = () => {
 
             <div className="flex items-center space-x-4 pl-4">
               <Button className="bg-yellow-600 rounded hover:bg-yellow-700 text-white px-6 py-2 font-medium tracking-wide transition-colors duration-300 shadow-md hover:shadow-lg">
-                List Property
+                Top Properties
               </Button>
             </div>
           </div>
@@ -271,7 +242,7 @@ const Header = () => {
                 </a>
                 <div className="mt-4 pt-4 border-t border-gray-200 space-y-3 px-4">
                   <Button className="w-full rounded bg-yellow-600 hover:bg-yellow-700 text-white">
-                    List Property
+                    Top Properties
                   </Button>
                 </div>
               </motion.div>

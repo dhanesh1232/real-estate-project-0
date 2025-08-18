@@ -91,3 +91,105 @@ export const propertySlides = [
       "https://images.unsplash.com/photo-1572120360610-d971b9d7767c?q=80&w=2070&auto=format&fit=crop",
   },
 ];
+
+export const dummyProperties = [
+  {
+    id: 1,
+    title: "Luxury 3BHK Apartment with Ocean View",
+    location: "Downtown, New York",
+    price: 750000,
+    beds: 3,
+    baths: 2,
+    sqft: 1800,
+    type: "Apartment",
+    featured: true,
+    image:
+      "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+  },
+  {
+    id: 2,
+    title: "Modern 2BHK Villa with Private Pool",
+    location: "Beverly Hills, Los Angeles",
+    price: 1200000,
+    beds: 2,
+    baths: 2,
+    sqft: 2200,
+    type: "Villa",
+    featured: true,
+    image:
+      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+  },
+  {
+    id: 3,
+    title: "Spacious 4BHK House with Garden",
+    location: "Suburbs, Chicago",
+    price: 950000,
+    beds: 4,
+    baths: 3,
+    sqft: 3200,
+    type: "House",
+    image:
+      "https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+  },
+  {
+    id: 4,
+    title: "Premium Commercial Office Space",
+    location: "Financial District, San Francisco",
+    price: 2500000,
+    beds: 0,
+    baths: 2,
+    sqft: 5000,
+    type: "Commercial",
+    image:
+      "https://images.unsplash.com/photo-1497366811353-6870744d04b2?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+  },
+  {
+    id: 5,
+    title: "Beautiful Plot for Sale - Waterfront",
+    location: "Outskirts, Austin",
+    price: 350000,
+    beds: 0,
+    baths: 0,
+    sqft: 10000,
+    type: "Plot",
+    image:
+      "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+  },
+  {
+    id: 6,
+    title: "Cozy 1BHK Apartment - City Center",
+    location: "Midtown, Miami",
+    price: 450000,
+    beds: 1,
+    baths: 1,
+    sqft: 850,
+    type: "Apartment",
+    image:
+      "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+  },
+  {
+    id: 7,
+    title: "Luxury Penthouse with Panoramic Views",
+    location: "Downtown, New York",
+    price: 2800000,
+    beds: 3,
+    baths: 3.5,
+    sqft: 3500,
+    type: "Apartment",
+    featured: true,
+    image:
+      "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+  },
+  {
+    id: 8,
+    title: "Historic Townhouse - Fully Renovated",
+    location: "Georgetown, Washington DC",
+    price: 1850000,
+    beds: 4,
+    baths: 3.5,
+    sqft: 3800,
+    type: "House",
+    image:
+      "https://images.unsplash.com/photo-1513584684374-8bab748fbf90?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+  },
+];
