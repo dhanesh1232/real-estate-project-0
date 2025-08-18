@@ -21,6 +21,7 @@ import { Search } from "lucide-react";
 import { debounce } from "lodash";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useLocalStorage } from "@/hooks/use-local-storage";
+import { useMediaQuery } from "@/hooks/mediaQuery";
 
 const PropertyListingsPage = () => {
   // State management
@@ -30,6 +31,7 @@ const PropertyListingsPage = () => {
   const [viewMode, setViewMode] = useState("grid");
   const [favorites, setFavorites] = useLocalStorage("property-favorites", []);
   const [showFilters, setShowFilters] = useState(false);
+  const isLarge = useMediaQuery("(min-width:1024px)");
 
   // Filter states
   const [priceRange, setPriceRange] = useState([0, 3000000]);
@@ -412,7 +414,7 @@ const PropertyListingsPage = () => {
         </div>
 
         {/* Show filters on mobile when toggled */}
-        {(showFilters || window.innerWidth >= 1024) && <FilterSection />}
+        {(showFilters || isLarge) && <FilterSection />}
 
         {/* Main Content Area */}
         <div>
