@@ -2,15 +2,10 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import { useEffect, useState, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  ChevronLeft,
-  ChevronRight,
-  Home,
-  MapPin,
-  MoveRight,
-} from "lucide-react";
+import { ChevronLeft, ChevronRight, MoveRight } from "lucide-react";
 import { propertySlides } from "@/lib/client/default_data";
-import { Input } from "@/components/ui/input";
+import { SearchHandle } from "./search";
+import { Button } from "@/components/ui/button";
 
 export function ModernHero() {
   const [index, setIndex] = useState(0);
@@ -20,6 +15,8 @@ export function ModernHero() {
   const thumbnailContainerRef = useRef(null);
   const thumbnailListRef = useRef(null);
   const timerRef = useRef(null);
+  const [dragStartX, setDragStartX] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
 
   // Scroll to center the active thumbnail
   const centerActiveThumbnail = useCallback((activeIndex) => {
@@ -98,6 +95,42 @@ export function ModernHero() {
     [index, slides, centerActiveThumbnail]
   );
 
+  // Handle drag start
+  const handleDragStart = (e) => {
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    setDragStartX(clientX);
+    setIsDragging(true);
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+    }
+  };
+
+  // Handle drag end
+  const handleDragEnd = (e, info) => {
+    if (!isDragging) return;
+
+    setIsDragging(false);
+    const clientX = e.changedTouches ? e.changedTouches[0].clientX : e.clientX;
+    const deltaX = clientX - dragStartX;
+
+    // Determine if the drag was significant enough to change slides
+    if (Math.abs(deltaX) > 50) {
+      if (deltaX > 0) {
+        prevSlide();
+      } else {
+        nextSlide();
+      }
+    }
+
+    // Restart the timer
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+    }
+    timerRef.current = setInterval(() => {
+      nextSlide();
+    }, 8000);
+  };
+
   useEffect(() => {
     setIsMount(true);
     // Center the first thumbnail on mount
@@ -136,20 +169,6 @@ export function ModernHero() {
     }
   }, [index, slides, isMount, centerActiveThumbnail]);
 
-  const handleScrollFocus = () => {
-    const scroll = window.scrollY;
-    if (scroll <= 100) {
-      window.scrollTo({
-        top: 400,
-        behavior: "smooth",
-      });
-    }
-  };
-
-  const handleFocus = (id) => {
-    handleScrollFocus();
-  };
-
   if (!isMount) {
     return (
       <div className="w-full h-screen flex items-center justify-center bg-gray-100">
@@ -159,11 +178,11 @@ export function ModernHero() {
   }
 
   return (
-    <div className="w-full h-screen relative overflow-hidden">
+    <div className="w-full min-h-screen relative flex flex-col justify-center overflow-hidden">
       {/* Gradient Overlay */}
       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent z-0" />
 
-      {/* Background Image */}
+      {/* Background Image with drag handlers */}
       <AnimatePresence mode="wait" custom={direction}>
         <motion.div
           key={slides[index].id}
@@ -172,17 +191,26 @@ export function ModernHero() {
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: direction > 0 ? -100 : 100 }}
           transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
-          className="absolute inset-0 z-0"
+          className="absolute inset-0 z-0 touch-none"
           style={{
             backgroundImage: `url(${slides[index].image})`,
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
+          onTouchStart={handleDragStart}
+          onTouchEnd={handleDragEnd}
+          onMouseDown={handleDragStart}
+          onMouseUp={handleDragEnd}
+          onMouseLeave={() => setIsDragging(false)}
+          drag="x"
+          dragConstraints={{ left: 0, right: 0 }}
+          dragElastic={0.2}
+          onDragEnd={handleDragEnd}
         />
       </AnimatePresence>
 
       {/* Content Container */}
-      <div className="relative z-10 h-4/5 flex flex-row items-end justify-between pb-16 px-6 sm:px-8 md:px-12 lg:px-16 xl:px-24 2xl:px-32">
+      <div className="relative z-10 h-3/5 md:h-3/4 flex flex-row items-end justify-between px-6 sm:px-8 md:px-12 lg:px-16 xl:px-24 2xl:px-32">
         {/* Text Content */}
         <AnimatePresence mode="wait" custom={direction}>
           <motion.div
@@ -192,7 +220,7 @@ export function ModernHero() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -50 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="max-w-2xl flex flex-col items-center md:items-start w-full md:w-1/2"
+            className="max-w-2xl p-2 md:p-4 flex flex-col bg-gradient-to-r from-transparent via-slate-600 to-transparent items-center md:items-start w-full md:w-1/2"
           >
             <motion.p
               className="text-gold-400 font-light tracking-[0.2em] text-xs mb-1"
@@ -219,19 +247,27 @@ export function ModernHero() {
               {slides[index].description}
             </motion.p>
             <motion.div
-              className="flex items-center gap-4"
+              className="flex items-center w-full justify-center md:justify-start gap-1 sm:gap-4"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.8 }}
             >
-              <button className="group relative bg-gold-600 hover:bg-gold-700 text-white px-8 py-3 font-medium tracking-wide transition-all duration-300 hover:shadow-lg flex items-center">
+              <Button
+                className="relative group truncate rounded-none"
+                variant="gold"
+                size="lg"
+              >
                 View Property
                 <MoveRight className="ml-2 h-4 w-4 transition-all duration-300 group-hover:translate-x-1" />
-              </button>
-              <button className="group relative border-2 border-white/80 text-white hover:bg-white/10 px-8 py-3 font-medium tracking-wide transition-all duration-300 flex items-center">
-                Contact Agent
+              </Button>
+              <Button
+                variant="outline"
+                size="lg"
+                className="group text-white truncate rounded-none text-center relative border-2 border-border"
+              >
+                Contact
                 <MoveRight className="ml-2 h-4 w-4 transition-all duration-300 group-hover:translate-x-1" />
-              </button>
+              </Button>
             </motion.div>
           </motion.div>
         </AnimatePresence>
@@ -240,14 +276,14 @@ export function ModernHero() {
         <div className="absolute top-1/2 left-4 right-4 flex justify-between -translate-y-1/2">
           <button
             onClick={prevSlide}
-            className="bg-white/10 hover:bg-white/20 backdrop-blur-md p-3 rounded-full text-white transition-all duration-300 hover:scale-110 border border-white/20"
+            className="bg-white/10 hover:bg-white/20 backdrop-blur-md p-1.5 md:p-3 rounded-full text-white transition-all duration-300 hover:scale-110 border border-white/20"
             aria-label="Previous slide"
           >
             <ChevronLeft className="h-6 w-6" strokeWidth={1.5} />
           </button>
           <button
             onClick={nextSlide}
-            className="bg-white/10 hover:bg-white/20 backdrop-blur-md p-3 rounded-full text-white transition-all duration-300 hover:scale-110 border border-white/20"
+            className="bg-white/10 hover:bg-white/20 backdrop-blur-md p-1.5 md:p-3 rounded-full text-white transition-all duration-300 hover:scale-110 border border-white/20"
             aria-label="Next slide"
           >
             <ChevronRight className="h-6 w-6" strokeWidth={1.5} />
@@ -295,33 +331,7 @@ export function ModernHero() {
           </div>
         </div>
       </div>
-      <div className="w-full relative h-1/5 z-20 flex flex-col items-center justify-center">
-        <h1 className="text-2xl text-white md:text-3xl font-sans font-bold">
-          Find Your Dream Home
-        </h1>
-        <p className="mb-1 text-white text-lg md:text-xl">
-          Explore thousands of properties for sale and rent.
-        </p>
-        {/* Search Bar */}
-        <div className="bg-background p-2 gap-2 rounded-sm flex items-center justify-between">
-          <div className="flex items-center gap-2 flex-1 border border-border px-2">
-            <MapPin className="w-5 h-5 text-muted-foreground" />
-            <Input
-              onFocus={() => handleFocus("location")}
-              placeholder="Enter location"
-              className="border-0 w-full bg-white focus:ring-0"
-            />
-          </div>
-          <div className="flex items-center gap-2 flex-1 border border-border rounded px-3">
-            <Home className="w-5 h-5 text-gray-500" />
-            <Input
-              onFocus={() => handleFocus("property")}
-              placeholder="Property Type"
-              className="border-0 w-full bg-white focus:ring-0"
-            />
-          </div>
-        </div>
-      </div>
+      <SearchHandle />
     </div>
   );
 }
