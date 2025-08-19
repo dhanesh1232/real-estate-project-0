@@ -12,6 +12,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { FaWhatsapp } from "react-icons/fa";
+import { ContactData, NavLinks, SocialData } from "@/lib/client/default_data";
+import { Icons } from "../icons";
 
 export default function Footer() {
   return (
@@ -26,21 +29,19 @@ export default function Footer() {
               premium listings and expert agents.
             </p>
             <div className="flex space-x-4 mt-4">
-              <a href="#" className="hover:text-white">
-                <Facebook />
-              </a>
-              <a href="#" className="hover:text-white">
-                <Instagram />
-              </a>
-              <a href="#" className="hover:text-white">
-                <Linkedin />
-              </a>
-              <a href="#" className="hover:text-white">
-                <Youtube />
-              </a>
-              <a href="#" className="hover:text-white">
-                <Twitter />
-              </a>
+              {SocialData.map((each) => {
+                const Icon = Icons[each.icon];
+                return (
+                  <Link
+                    target="_blank"
+                    key={each.id}
+                    href={each.href}
+                    className="hover:text-blue-600 w-8 h-8 bg-white/30 rounded flex items-center justify-center"
+                  >
+                    <Icon size={18} />
+                  </Link>
+                );
+              })}
             </div>
           </div>
 
@@ -50,31 +51,25 @@ export default function Footer() {
               Quick Links
             </h3>
             <ul className="space-y-2 text-sm">
-              <li>
-                <a href="#" className="hover:text-white">
-                  Home
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-white">
-                  Properties
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-white">
-                  Agents
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-white">
-                  About Us
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-white">
-                  Contact
-                </a>
-              </li>
+              {NavLinks.map((each) => {
+                const Icon = Icons[each.icon];
+                return (
+                  <li key={each.id} className="group">
+                    <Link
+                      href={each.href}
+                      className="inline-flex items-center gap-1"
+                    >
+                      <Icon
+                        size={16}
+                        className="group-hover:text-blue-600 transition ease-in-out duration-150"
+                      />
+                      <span className="group-hover:underline group-hover:text-blue-500 group-hover:font-semibold">
+                        {each.label}
+                      </span>
+                    </Link>
+                  </li>
+                );
+              })}
             </ul>
           </div>
 
@@ -84,15 +79,26 @@ export default function Footer() {
               Contact Us
             </h3>
             <ul className="space-y-3 text-sm">
-              <li className="flex items-center gap-2">
-                <Phone className="w-4 h-4" /> +91 98765 43210
-              </li>
-              <li className="flex items-center gap-2">
-                <Mail className="w-4 h-4" /> support@ecodrixrealty.com
-              </li>
-              <li className="flex items-center gap-2">
-                <MapPin className="w-4 h-4" /> Hyderabad, India
-              </li>
+              {ContactData.map((each) => {
+                const Icon = Icons[each.icon];
+                return (
+                  <li key={each.id} className="group">
+                    <Link
+                      href={each.href}
+                      target="_blank"
+                      className="inline-flex items-center gap-1"
+                    >
+                      <Icon
+                        size={16}
+                        className="group-hover:text-blue-600 transition ease-in-out duration-150"
+                      />
+                      <span className="group-hover:text-blue-500">
+                        {each.label}
+                      </span>
+                    </Link>
+                  </li>
+                );
+              })}
             </ul>
           </div>
 
@@ -108,7 +114,7 @@ export default function Footer() {
               <Input
                 type="email"
                 placeholder="Enter your email"
-                className="rounded-r-none border-0 bg-white text-black flex-1"
+                className="rounded rounded-r-none outline-none border-0 focus:ring-0 focus-within:ring-0 bg-white text-black flex-1"
               />
               <Button className="rounded-l-none bg-primary text-white whitespace-nowrap">
                 Subscribe

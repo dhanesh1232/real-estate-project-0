@@ -6,6 +6,8 @@ import { ChevronLeft, ChevronRight, MoveRight } from "lucide-react";
 import { propertySlides } from "@/lib/client/default_data";
 import { SearchHandle } from "./search";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import Image from "next/image";
 
 export function ModernHero() {
   const [index, setIndex] = useState(0);
@@ -178,7 +180,7 @@ export function ModernHero() {
   }
 
   return (
-    <div className="w-full min-h-screen relative flex flex-col justify-center overflow-hidden">
+    <div className="w-full h-screen relative flex flex-col justify-center overflow-hidden">
       {/* Gradient Overlay */}
       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent z-0" />
 
@@ -210,7 +212,7 @@ export function ModernHero() {
       </AnimatePresence>
 
       {/* Content Container */}
-      <div className="relative z-10 h-3/5 md:h-3/4 flex flex-row items-end justify-between px-6 sm:px-8 md:px-12 lg:px-16 xl:px-24 2xl:px-32">
+      <div className="relative z-10 h-4/5 lg:h-3/4 flex flex-row items-center md:items-end justify-between px-6 pb-16 sm:px-8 md:px-12 lg:px-16 xl:px-24 2xl:px-32">
         {/* Text Content */}
         <AnimatePresence mode="wait" custom={direction}>
           <motion.div
@@ -231,7 +233,7 @@ export function ModernHero() {
               {slides[index]["sub-heading"]}
             </motion.p>
             <motion.h2
-              className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-serif font-bold text-white mb-1 leading-tight"
+              className="text-2xl md:text-3xl font-serif italic lg:text-4xl xl:text-5xl font-bold text-white mb-1 leading-tight"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
@@ -252,21 +254,23 @@ export function ModernHero() {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.8 }}
             >
-              <Button
-                className="relative group truncate rounded-none"
-                variant="gold"
-                size="lg"
-              >
-                View Property
-                <MoveRight className="ml-2 h-4 w-4 transition-all duration-300 group-hover:translate-x-1" />
+              <Button asChild variant="gold" size="lg">
+                <Link
+                  href="/properties"
+                  className="relative group truncate rounded-none"
+                >
+                  View Property
+                  <MoveRight className="ml-2 h-4 w-4 transition-all duration-300 group-hover:translate-x-1" />
+                </Link>
               </Button>
-              <Button
-                variant="outline"
-                size="lg"
-                className="group text-white truncate rounded-none text-center relative border-2 border-border"
-              >
-                Contact
-                <MoveRight className="ml-2 h-4 w-4 transition-all duration-300 group-hover:translate-x-1" />
+              <Button variant="outline" size="lg" asChild>
+                <Link
+                  className="group text-white bg-transparent truncate rounded-none text-center relative border-2 border-border"
+                  href="/contact"
+                >
+                  Contact
+                  <MoveRight className="ml-2 h-4 w-4 transition-all duration-300 group-hover:translate-x-1" />
+                </Link>
               </Button>
             </motion.div>
           </motion.div>
@@ -309,19 +313,21 @@ export function ModernHero() {
                 <button
                   key={slide.id}
                   onClick={() => goToSlide(i)}
-                  className={`flex-shrink-0 m-1 relative group transition-all rounded-sm duration-300 ${
-                    isActive ? "scale-105 ring-2 ring-blue-600" : "scale-100"
+                  className={`flex-shrink-0 m-1 relative cursor-pointer group transition-all ease-in-out rounded duration-300 ${
+                    isActive ? "scale-95 ring-2 ring-blue-600" : "scale-100"
                   }`}
                   aria-label={`Go to slide ${i + 1}`}
                 >
-                  <div className="w-20 h-12 md:w-24 md:h-16 lg:w-28 lg:h-18 overflow-hidden rounded-sm">
-                    <img
+                  <div className="w-20 h-12 md:w-24 md:h-16 lg:w-28 lg:h-18 overflow-hidden rounded">
+                    <Image
+                      width={100}
+                      height={100}
                       src={slide.image}
-                      alt=""
+                      alt={slide["sub-heading"] || ""}
                       className={`w-full h-full object-cover transition-all border-none duration-300 ${
                         isActive
                           ? "opacity-100 brightness-100"
-                          : "opacity-60 brightness-75 group-hover:opacity-80"
+                          : "opacity-60 brightness-50 group-hover:opacity-80"
                       }`}
                     />
                   </div>

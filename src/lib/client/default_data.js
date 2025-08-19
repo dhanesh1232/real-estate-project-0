@@ -193,3 +193,125 @@ export const dummyProperties = [
       "https://images.unsplash.com/photo-1513584684374-8bab748fbf90?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
   },
 ];
+
+export const ContactData = [
+  {
+    id: "phone",
+    icon: "phone",
+    tag: "Phone",
+    label: "+91 9876543210",
+    href: "tel:+919876543210",
+    description: "Call us for immediate assistance",
+  },
+  {
+    id: "whatsapp",
+    icon: "whatsapp",
+    tag: "Whatsapp",
+    label: "+91 9876543210",
+    href: "https://wa.me/919876543210",
+    description: "Chat with us on WhatsApp",
+  },
+  {
+    id: "mail",
+    icon: "mail",
+    tag: "Mail",
+    label: "contact@ecodrixrealty.com",
+    href: "mailto:contact@ecodrixrealty.com",
+    description: "Email us your queries",
+  },
+  {
+    id: "map",
+    icon: "map",
+    tag: "Location",
+    label: "123 Business Hub, Tirupati Main Road",
+    href: "https://maps.google.com/?q=Tirupati,Andhra+Pradesh",
+    description: "Visit our office in Tirupati",
+    address: {
+      street: "123 Business Hub",
+      area: "Tirupati Main Road",
+      city: "Tirupati",
+      state: "Andhra Pradesh",
+      country: "India",
+      pincode: "517501",
+    },
+  },
+];
+
+export const SocialData = [
+  {
+    id: "facebook",
+    icon: "facebook",
+    label: "Facebook",
+    href: "https://facebook.com",
+  },
+  {
+    id: "instagram",
+    icon: "instagram",
+    label: "Instagram",
+    href: "https://instagram.com",
+  },
+  {
+    id: "linkedIn",
+    icon: "linkedIn",
+    label: "LinkedIn",
+    href: "https://linkedin.com",
+  },
+  {
+    id: "twitter",
+    icon: "twitter",
+    label: "Twitter",
+    href: "https://twitter.com",
+  },
+];
+
+export const NavLinks = [
+  {
+    id: "home",
+    href: "/",
+    icon: "home",
+    label: "Home",
+    description: "Return to homepage",
+  },
+  {
+    id: "properties",
+    href: "/properties",
+    icon: "building",
+    label: "Properties",
+    description: "Browse available properties",
+  },
+  {
+    id: "about",
+    href: "/about",
+    icon: "info",
+    label: "About Us",
+    description: "Learn more about our company",
+  },
+  {
+    id: "contact",
+    href: "/contact",
+    icon: "headset",
+    label: "Contact",
+    description: "Get in touch with us",
+  },
+  // {
+  //   id: "blog",
+  //   href: "/blog",
+  //   icon: "newspaper",
+  //   label: "Blog",
+  //   description: "Read our latest articles",
+  // },
+  // {
+  //   id: "favorites",
+  //   href: "/favorites",
+  //   icon: "heart",
+  //   label: "Favorites",
+  //   description: "View your saved properties",
+  // },
+  // {
+  //   id: "search",
+  //   href: "/search",
+  //   icon: "search",
+  //   label: "Search",
+  //   description: "Search properties",
+  // },
+];

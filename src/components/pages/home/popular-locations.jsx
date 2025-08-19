@@ -39,7 +39,7 @@ export function PopularLocations() {
         {locations.map((loc) => (
           <div
             key={loc.id}
-            className="relative overflow-hidden rounded-2xl shadow-lg group"
+            className="relative overflow-hidden rounded shadow-lg group"
           >
             <img
               src={loc.image}

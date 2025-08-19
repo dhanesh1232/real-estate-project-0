@@ -190,6 +190,54 @@ const PropertyListingsPage = () => {
     );
   }, [priceRange, selectedLocation, selectedType, beds, baths, searchQuery]);
 
+  // Custom slider component with enhanced smoothness
+  const EnhancedSlider = ({
+    value,
+    onValueChange,
+    min,
+    max,
+    step,
+    className,
+  }) => {
+    const [localValue, setLocalValue] = useState(value);
+    const [isDragging, setIsDragging] = useState(false);
+
+    // Update local value when prop changes
+    useEffect(() => {
+      setLocalValue(value);
+    }, [value]);
+
+    const handleValueChange = (newValue) => {
+      setLocalValue(newValue);
+    };
+
+    const handleValueCommit = (newValue) => {
+      onValueChange(newValue);
+      setIsDragging(false);
+    };
+
+    return (
+      <div className={`relative ${className}`}>
+        <Slider
+          value={localValue}
+          min={min}
+          max={max}
+          step={step}
+          onValueChange={handleValueChange}
+          onValueCommit={handleValueCommit}
+          onPointerDown={() => setIsDragging(true)}
+          className="transition-all duration-150 ease-out"
+        />
+        {/* Value indicator that appears during drag */}
+        {isDragging && (
+          <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-100 transition-opacity duration-200">
+            {formatPrice(localValue[0])} - {formatPrice(localValue[1])}
+          </div>
+        )}
+      </div>
+    );
+  };
+
   const FilterSection = () => (
     <div className="bg-white p-6 rounded shadow-md lg:sticky lg:top-24 lg:h-[calc(100vh-120px)] lg:overflow-y-auto">
       <div className="flex justify-between items-center mb-4">
@@ -229,7 +277,10 @@ const PropertyListingsPage = () => {
               defaultValue={searchQuery}
               onChange={(e) => debouncedSearch(e.target.value)}
             />
-            <Search className="absolute right-3 top-3 text-gray-400" />
+            <Search
+              size={18}
+              className="absolute right-3 top-3 text-gray-400"
+            />
           </div>
         </div>
 
@@ -283,12 +334,12 @@ const PropertyListingsPage = () => {
             Price Range: {formatPrice(priceRange[0])} -{" "}
             {formatPrice(priceRange[1])}
           </label>
-          <Slider
+          <EnhancedSlider
+            value={priceRange}
             min={0}
             max={3000000}
             step={50000}
-            value={priceRange}
-            onValueChange={(value) => setPriceRange(value)}
+            onValueChange={setPriceRange}
             className="w-full mt-2"
           />
         </div>
@@ -380,7 +431,7 @@ const PropertyListingsPage = () => {
           </div>
 
           {/* Main Content Area */}
-          <div className="flex-1">
+          <div className="flex-1 p-2">
             {/* Mobile filter toggle */}
             <div className="lg:hidden mb-6 flex items-center gap-4">
               <Button
@@ -429,8 +480,9 @@ const PropertyListingsPage = () => {
             >
               <FilterSection />
             </div>
+
             {/* Results Summary and Controls */}
-            <div className="bg-white p-5 rounded shadow-md mb-8">
+            <div className="bg-white p-5 rounded shadow-md mb-4">
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
                   <h2 className="text-xl font-bold text-gray-800">
