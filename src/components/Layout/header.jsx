@@ -140,7 +140,7 @@ const Header = () => {
                   return (
                     <li
                       key={each.id}
-                      className="border-l border-r border-white/30 m-0 list-none p-2 lg:px-0 px-3"
+                      className="border-l border-r border-white/30 m-0 list-none p-2 lg:px-2 px-3"
                     >
                       <Link
                         target="_blank"
