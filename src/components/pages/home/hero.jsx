@@ -132,6 +132,7 @@ export function ModernHero() {
       nextSlide();
     }, 8000);
   };
+  const MotionImage = motion(Image);
 
   useEffect(() => {
     setIsMount(true);
@@ -186,19 +187,19 @@ export function ModernHero() {
 
       {/* Background Image with drag handlers */}
       <AnimatePresence mode="wait" custom={direction}>
-        <motion.div
+        <MotionImage
           key={slides[index].id}
           custom={direction}
+          src={slides[index].image}
+          alt={slides[index].title || ""}
+          fill
+          priority={index === 0} // first slide loads eagerly
+          sizes="100vw"
+          className="absolute inset-0 object-cover touch-none"
           initial={{ opacity: 0, x: direction > 0 ? 100 : -100 }}
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: direction > 0 ? -100 : 100 }}
           transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
-          className="absolute inset-0 z-0 object-cover touch-none"
-          style={{
-            backgroundImage: `url(${slides[index].image})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
           onTouchStart={handleDragStart}
           onTouchEnd={handleDragEnd}
           onMouseDown={handleDragStart}

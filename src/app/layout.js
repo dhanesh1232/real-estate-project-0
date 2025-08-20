@@ -1,9 +1,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Header from "@/components/Layout/header";
-import Footer from "@/components/Layout/footer";
-import FloatButton from "@/components/Layout/whatsapp-float";
-import BackToTop from "@/components/Layout/back-to-top";
+import MainLayout from "@/layout/main";
+import { MainProvider } from "@/context/main";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -54,11 +52,9 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Header />
-        {children}
-        <Footer />
-        <FloatButton />
-        <BackToTop />
+        <MainProvider>
+          <MainLayout>{children}</MainLayout>
+        </MainProvider>
       </body>
     </html>
   );

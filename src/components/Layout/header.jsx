@@ -13,6 +13,7 @@ import { ContactData, NavLinks, SocialData } from "@/lib/client/default_data";
 import { Icons } from "../icons";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { MenuToggle } from "./menu-toggle";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -93,7 +94,7 @@ const Header = () => {
             : "bg-background/95 backdrop-blur-md border-b border-border/40 shadow-sm"
           : isMenuOpen
           ? "bg-background backdrop-blur-md shadow-xl"
-          : "bg-transparent"
+          : "bg-white md:bg-transparent"
       } fixed top-0 z-50`}
     >
       {/* Scroll progress indicator */}
@@ -220,56 +221,19 @@ const Header = () => {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
-              <Button className="bg-yellow-600 rounded hover:bg-yellow-700 text-white px-6 py-2 font-medium tracking-wide transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
-                Top Properties
+              <Button
+                variant="gold"
+                asChild
+                className="bg-yellow-600 rounded hover:bg-yellow-700 text-white px-6 py-2 font-medium tracking-wide transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+              >
+                <Link href="/properties">Top Properties</Link>
               </Button>
             </motion.div>
           </div>
 
           {/* Mobile menu button */}
           <div className="md:hidden">
-            <motion.button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="text-gray-700 transform transition-all duration-300 hover:text-yellow-600 focus:outline-none"
-              whileTap={{ scale: 0.9 }}
-              aria-label="Toggle menu"
-            >
-              {isMenuOpen ? (
-                <motion.svg
-                  className="h-8 w-8"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  initial={{ rotate: 0 }}
-                  animate={{ rotate: 90 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1.5}
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </motion.svg>
-              ) : (
-                <motion.svg
-                  className="h-8 w-8"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  initial={{ rotate: 0 }}
-                  animate={{ rotate: 0 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1.5}
-                    d="M4 6h16M4 12h16M4 18h16"
-                  />
-                </motion.svg>
-              )}
-            </motion.button>
+            <MenuToggle setIsMenuOpen={setIsMenuOpen} isMenuOpen={isMenuOpen} />
           </div>
         </div>
 
@@ -320,10 +284,12 @@ const Header = () => {
                   custom={3}
                 >
                   <Button
+                    asChild
+                    variant="gold"
                     className="w-full rounded bg-yellow-600 hover:bg-yellow-700 text-white transition-all duration-300 transform hover:-translate-y-0.5"
                     onClick={() => setIsMenuOpen(false)}
                   >
-                    Top Properties
+                    <Link href="/properties">Top Properties</Link>
                   </Button>
                 </motion.div>
               </div>
