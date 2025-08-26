@@ -193,7 +193,7 @@ export function ModernHero() {
           src={slides[index].image}
           alt={slides[index].title || ""}
           fill
-          priority={index === 0} // first slide loads eagerly
+          priority={index === 0}
           sizes="100vw"
           className="absolute inset-0 object-cover touch-none"
           initial={{ opacity: 0, x: direction > 0 ? 100 : -100 }}
@@ -213,7 +213,7 @@ export function ModernHero() {
       </AnimatePresence>
 
       {/* Content Container */}
-      <div className="relative z-10 h-4/5 lg:h-3/4 flex flex-row items-center md:items-end justify-between px-6 pb-16 sm:px-8 md:px-12 lg:px-16 xl:px-24 2xl:px-32">
+      <div className="relative z-10 h-4/5 lg:h-3/4 flex flex-row mb-14 sm:mb-0 items-end md:items-end justify-between px-6 pb-16 sm:px-8 md:px-12 lg:px-16 xl:px-24 2xl:px-32">
         {/* Text Content */}
         <AnimatePresence mode="wait" custom={direction}>
           <motion.div
@@ -242,7 +242,7 @@ export function ModernHero() {
               {slides[index].title}
             </motion.h2>
             <motion.p
-              className="text-white/80 font-light text-base md:text-lg mb-2 leading-relaxed max-w-xl"
+              className="text-white/80 font-light md:text-left text-center text-base md:text-lg mb-1 sm:mb-2 leading-relaxed max-w-xl"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.6 }}
@@ -276,24 +276,6 @@ export function ModernHero() {
             </motion.div>
           </motion.div>
         </AnimatePresence>
-
-        {/* Navigation Controls */}
-        <div className="absolute top-1/2 left-4 right-4 flex justify-between -translate-y-1/2">
-          <button
-            onClick={prevSlide}
-            className="bg-white/10 hover:bg-white/20 backdrop-blur-md p-1.5 md:p-3 rounded-full text-white transition-all duration-300 hover:scale-110 border border-white/20"
-            aria-label="Previous slide"
-          >
-            <ChevronLeft className="h-6 w-6" strokeWidth={1.5} />
-          </button>
-          <button
-            onClick={nextSlide}
-            className="bg-white/10 hover:bg-white/20 backdrop-blur-md p-1.5 md:p-3 rounded-full text-white transition-all duration-300 hover:scale-110 border border-white/20"
-            aria-label="Next slide"
-          >
-            <ChevronRight className="h-6 w-6" strokeWidth={1.5} />
-          </button>
-        </div>
 
         {/* Thumbnail Navigation */}
         <div
@@ -337,6 +319,23 @@ export function ModernHero() {
             })}
           </div>
         </div>
+      </div>
+      {/* Navigation Controls */}
+      <div className="absolute top-1/2 left-4 right-4 z-20 flex justify-between -translate-y-1/2">
+        <button
+          onClick={prevSlide}
+          className="bg-white/10 hover:bg-white/20 backdrop-blur-md p-1.5 md:p-3 rounded-full text-white transition-all duration-300 hover:scale-110 border border-white/20"
+          aria-label="Previous slide"
+        >
+          <ChevronLeft className="h-6 w-6" strokeWidth={1.5} />
+        </button>
+        <button
+          onClick={nextSlide}
+          className="bg-white/10 hover:bg-white/20 backdrop-blur-md p-1.5 md:p-3 rounded-full text-white transition-all duration-300 hover:scale-110 border border-white/20"
+          aria-label="Next slide"
+        >
+          <ChevronRight className="h-6 w-6" strokeWidth={1.5} />
+        </button>
       </div>
       <SearchHandle />
     </div>

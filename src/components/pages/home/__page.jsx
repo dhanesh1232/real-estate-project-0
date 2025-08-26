@@ -29,14 +29,14 @@ export default function HomePage() {
       {/* Testimonials */}
       <Testimonials />
 
-      {/* Call to Action */}
-      <CallToAction />
-
       {/* Partner */}
-      <Partners />
+      {/* <Partners /> */}
 
       {/* Newsletter */}
       <NewsLetter />
+
+      {/* Call to Action */}
+      <CallToAction />
     </div>
   );
 }

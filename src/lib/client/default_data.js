@@ -141,24 +141,28 @@ export const SocialData = [
     icon: "facebook",
     label: "Facebook",
     href: "https://facebook.com",
+    color: "#1877F2", // Facebook blue
   },
   {
     id: "instagram",
     icon: "instagram",
     label: "Instagram",
     href: "https://instagram.com",
+    color: "#E4405F", // Instagram gradient pink/purple
   },
   {
     id: "linkedIn",
     icon: "linkedIn",
     label: "LinkedIn",
     href: "https://linkedin.com",
+    color: "#0A66C2", // LinkedIn blue
   },
   {
     id: "twitter",
     icon: "twitter",
     label: "Twitter",
     href: "https://twitter.com",
+    color: "#1DA1F2", // Twitter blue
   },
 ];
 
@@ -212,6 +216,52 @@ export const NavLinks = [
   //   label: "Search",
   //   description: "Search properties",
   // },
+];
+
+export const AdminLinks = [
+  {
+    id: "dashboard",
+    href: "/admin",
+    label: "Dashboard",
+    icon: "dashboard",
+  },
+  {
+    id: "properties",
+    label: "Properties",
+    href: "/admin/properties",
+    icon: "building",
+  },
+  {
+    id: "blogs",
+    label: "Blog",
+    href: "/admin/blogs",
+    icon: "bookOpen",
+  },
+  // {
+  //   id: "leads",
+  //   label: "Leads",
+  //   href: "/admin/leads",
+  //   icon: "userPlus",
+  // },
+  // {
+  //   id: "media",
+  //   label: "Files",
+  //   href: "/admin/files",
+  //   icon: "media",
+  // },
+  // {
+  //   id: "contact",
+  //   label: "Contact",
+  //   href: "/admin/contacts",
+  //   icon: "users",
+  // },
+  // {
+  //   id: "guide",
+  //   label: "Guide",
+  //   href: "/admin/guide",
+  //   icon: "newsPaper",
+  // },
+  { id: "public", href: "/", label: "Public Pages", icon: "return" },
 ];
 
 export const dummyProperties = [
@@ -436,3 +486,5 @@ export const dummyProperties = [
       "https://images.unsplash.com/photo-1536376072261-38c75010e6c9?auto=format&fit=crop&w=800&q=80",
   },
 ];
+
+export const propertyType = [];

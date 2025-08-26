@@ -3,30 +3,42 @@ import { Input } from "@/components/ui/input";
 
 export const NewsLetter = () => {
   return (
-    <section className="bg-gradient-to-r from-gray-50 to-gray-100 py-20">
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="bg-transparent text-center p-8 md:p-12">
-          <h2 className="text-4xl font-bold mb-4 bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
-            Stay Updated
-          </h2>
-          <p className="text-gray-600 mb-8 text-lg max-w-2xl mx-auto">
-            Subscribe to our newsletter for exclusive property listings, market
-            insights, and real estate trends delivered right to your inbox.
-          </p>
-          <div className="flex flex-col sm:flex-row max-w-md mx-auto gap-4">
-            <Input
-              type="email"
-              placeholder="Enter your email"
-              className="flex-1 py-3 h-12 rounded focus:ring-2 focus:ring-primary/50"
-            />
-            <Button className="bg-primary cursor-pointer hover:bg-primary/90 text-white font-semibold px-8 h-12 rounded transition-all duration-300 transform">
-              Subscribe Now
-            </Button>
-          </div>
-          <p className="text-xs text-gray-500 mt-4">
-            By subscribing, you agree to our Privacy Policy and Terms of Service
-          </p>
+    <section className="relative py-24 bg-gradient-to-br to-white from-blue-50 overflow-hidden">
+      {/* Background subtle decoration */}
+      <div className="absolute inset-0">
+        <div className="absolute top-20 left-1/2 -translate-x-1/2 w-[700px] h-[700px] rounded-full bg-blue-100/40 blur-3xl"></div>
+      </div>
+
+      <div className="relative max-w-3xl mx-auto text-center px-6">
+        {/* Premium Title */}
+        <h2 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">
+          <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+            Stay Informed, Stay Ahead
+          </span>
+        </h2>
+
+        <p className="text-gray-600 text-lg md:text-xl leading-relaxed mb-10">
+          Join our exclusive newsletter to receive curated insights, premium
+          updates, and market trends delivered straight to your inbox.
+        </p>
+
+        {/* Input + Button */}
+        <div className="flex flex-col sm:flex-row items-center gap-4 max-w-lg mx-auto">
+          <Input
+            type="email"
+            placeholder="Enter your email address"
+            className="flex-1 h-12 px-4 rounded border border-gray-200 shadow-sm focus:border-primary focus:ring-2 focus:ring-primary/30 transition"
+          />
+          <Button className="h-12 px-8 text-white font-semibold rounded bg-gradient-to-r from-primary to-primary/80 hover:opacity-90 transition-all duration-300">
+            Subscribe
+          </Button>
         </div>
+
+        <p className="text-xs text-gray-500 mt-6">
+          By subscribing, you agree to our{" "}
+          <span className="underline cursor-pointer">Privacy Policy</span> and{" "}
+          <span className="underline cursor-pointer">Terms of Service</span>.
+        </p>
       </div>
     </section>
   );

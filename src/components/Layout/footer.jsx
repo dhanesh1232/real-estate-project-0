@@ -1,18 +1,8 @@
 "use client";
-import {
-  Facebook,
-  Instagram,
-  Linkedin,
-  Twitter,
-  Youtube,
-  Mail,
-  Phone,
-  MapPin,
-} from "lucide-react";
+
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { FaWhatsapp } from "react-icons/fa";
 import { ContactData, NavLinks, SocialData } from "@/lib/client/default_data";
 import { Icons } from "../icons";
 
@@ -36,7 +26,11 @@ export default function Footer() {
                     target="_blank"
                     key={each.id}
                     href={each.href}
-                    className="hover:text-blue-600 w-8 h-8 bg-white/30 rounded flex items-center justify-center"
+                    style={{
+                      "--hover-color": each.color,
+                    }}
+                    className="w-8 h-8 bg-white/30 rounded hover:rounded-full transform flex items-center justify-center 
+                   text-white hover:[color:var(--hover-color)] transition-all ease-in-out duration-150"
                   >
                     <Icon size={18} />
                   </Link>

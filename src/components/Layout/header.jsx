@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState, useRef } from "react";
-import { Button } from "@/components/ui/button";
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -14,6 +13,7 @@ import { Icons } from "../icons";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { MenuToggle } from "./menu-toggle";
+import { Join, ProfileHandle } from "./join-button";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -112,7 +112,7 @@ const Header = () => {
             animate={{ y: 0, opacity: 1 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ ease: "easeInOut", duration: 0.3 }}
-            className={`max-w-full mx-auto px-4 sm:px-6 bg-gradient-to-r from-slate-800 to-slate-900 border-b border-white/30 text-yellow-500 text-center`}
+            className={`max-w-full hidden sm:block mx-auto px-4 sm:px-6 bg-gradient-to-r from-slate-800 to-slate-900 border-b border-white/30 text-yellow-500 text-center`}
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2 lg:space-x-4">
@@ -175,7 +175,7 @@ const Header = () => {
             whileHover="hover"
           >
             <a href="/" className="flex items-center flex-col group relative">
-              <span className="text-3xl font-serif font-bold tracking-wider bg-gradient-to-r from-amber-500 via-yellow-500 to-yellow-600 bg-clip-text text-transparent drop-shadow-sm">
+              <span className="text-2xl font-serif font-bold tracking-wider bg-gradient-to-r from-amber-500 via-yellow-500 to-yellow-600 bg-clip-text text-transparent drop-shadow-sm">
                 LuxEstate
               </span>
               <span className="ml-1 absolute right-0 -bottom-2 text-xs text-end font-light bg-gradient-to-r from-gray-400 to-gray-600 bg-clip-text text-transparent uppercase tracking-widest">
@@ -216,23 +216,21 @@ const Header = () => {
               </NavigationMenuList>
             </NavigationMenu>
 
-            <motion.div
-              className="flex items-center space-x-4 pl-4"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              <Button
+            <div className="flex items-center space-x-2 pl-2">
+              {/* <Button
                 variant="gold"
                 asChild
-                className="bg-yellow-600 rounded hover:bg-yellow-700 text-white px-6 py-2 font-medium tracking-wide transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+                className="bg-yellow-600 rounded hover:bg-yellow-700 text-white px-3 py-2 font-medium tracking-wide transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
               >
                 <Link href="/properties">Top Properties</Link>
-              </Button>
-            </motion.div>
+              </Button> */}
+              <Join />
+            </div>
           </div>
 
           {/* Mobile menu button */}
-          <div className="md:hidden">
+          <div className="md:hidden inline-flex items-center gap-2">
+            <ProfileHandle className="block md:hidden" align="end" />
             <MenuToggle setIsMenuOpen={setIsMenuOpen} isMenuOpen={isMenuOpen} />
           </div>
         </div>
@@ -247,52 +245,37 @@ const Header = () => {
               exit="hidden"
               variants={mobileMenuVariants}
             >
-              <div className="pt-2 pb-4 space-y-1">
-                <motion.a
-                  href="/properties"
-                  className="block px-4 py-3 text-gray-700 hover:text-yellow-600 hover:bg-amber-50 transition-all duration-300 font-medium"
-                  variants={navItemVariants}
-                  custom={0}
-                  whileHover={{ x: 5 }}
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Properties
-                </motion.a>
-                <motion.a
-                  href="/about"
-                  className="block px-4 py-3 text-gray-700 hover:text-yellow-600 hover:bg-amber-50 transition-all duration-300 font-medium"
-                  variants={navItemVariants}
-                  custom={1}
-                  whileHover={{ x: 5 }}
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  About
-                </motion.a>
-                <motion.a
-                  href="/contact"
-                  className="block px-4 py-3 text-gray-700 hover:text-yellow-600 hover:bg-amber-50 transition-all duration-300 font-medium"
-                  variants={navItemVariants}
-                  custom={2}
-                  whileHover={{ x: 5 }}
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Contact
-                </motion.a>
+              <ul className="pt-2 pb-4 space-y-1">
+                {NavLinks.map((each) => {
+                  const Icon = Icons[each.icon];
+                  return (
+                    <motion.li
+                      key={each.id}
+                      className="px-4 py-3 block hover:text-yellow-600 hover:bg-amber-50 rounded-sm transition-all duration-300 font-medium"
+                      variants={navItemVariants}
+                      custom={0}
+                      whileHover={{ x: 1.5 }}
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      <Link
+                        href={each.href}
+                        className="inline-flex w-full justify-start items-center gap-2 text-sm"
+                      >
+                        <Icon className="text-gray-500" />
+                        <span className="text-gray-700">{each.label}</span>
+                      </Link>
+                    </motion.li>
+                  );
+                })}
+
                 <motion.div
-                  className="mt-4 pt-4 border-t border-gray-200 space-y-3 px-4"
+                  className="mt-4 pt-2 border-t border-gray-200 space-y-3 px-0"
                   variants={navItemVariants}
                   custom={3}
                 >
-                  <Button
-                    asChild
-                    variant="gold"
-                    className="w-full rounded bg-yellow-600 hover:bg-yellow-700 text-white transition-all duration-300 transform hover:-translate-y-0.5"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    <Link href="/properties">Top Properties</Link>
-                  </Button>
+                  <Join />
                 </motion.div>
-              </div>
+              </ul>
             </motion.div>
           )}
         </AnimatePresence>

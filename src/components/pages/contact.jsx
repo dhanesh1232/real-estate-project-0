@@ -62,39 +62,6 @@ export default function ContactPage() {
     transition: { duration: 0.6, delay: direction === "left" ? 0.2 : 0.4 },
   });
 
-  const testimonials = [
-    {
-      id: 1,
-      name: "Sarah Johnson",
-      role: "Luxury Home Buyer",
-      content:
-        "The team provided exceptional service throughout our home buying process. Their attention to detail and market knowledge is unmatched.",
-      rating: 5,
-    },
-    {
-      id: 2,
-      name: "Michael Chen",
-      role: "Property Investor",
-      content:
-        "Professional, responsive, and truly understands the luxury market. They found exactly what we were looking for in record time.",
-      rating: 5,
-    },
-    {
-      id: 3,
-      name: "Emma Rodriguez",
-      role: "First-time Seller",
-      content:
-        "Sold our property above asking price within a week. Their marketing strategy and negotiation skills are impressive.",
-      rating: 5,
-    },
-  ];
-
-  const renderStars = (count) => {
-    return Array.from({ length: count }).map((_, i) => (
-      <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-    ));
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50/30 relative overflow-hidden">
       {/* Premium decorative elements */}
@@ -155,7 +122,7 @@ export default function ContactPage() {
             <div className="absolute -inset-4 bg-gradient-to-r from-primary/5 to-yellow-400/5 rounded-2xl blur-lg opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
             <form
               onSubmit={handleSubmit}
-              className="relative space-y-6 bg-white p-10 rounded shadow-xl border border-gray-100/50 backdrop-blur-sm hover:shadow-2xl transition-all duration-500 group"
+              className="relative space-y-6 bg-white p-10 rounded shadow border border-gray-100/50 backdrop-blur-sm transition-all duration-500 group"
             >
               <div className="text-center mb-8">
                 <h3 className="text-2xl font-serif text-gray-900 mb-2">
@@ -178,7 +145,7 @@ export default function ContactPage() {
                     value={formData.name}
                     onChange={handleChange}
                     placeholder="John Doe"
-                    className="w-full border border-gray-200 px-4 py-3.5 focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-300 bg-white outline-none rounded  hover:border-gray-300"
+                    className="w-full border shadow-none border-gray-200 px-4 py-3.5 focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-300 bg-white outline-none rounded  hover:border-gray-300"
                     required
                   />
                 </div>
@@ -196,7 +163,7 @@ export default function ContactPage() {
                     value={formData.email}
                     onChange={handleChange}
                     placeholder="john@example.com"
-                    className="w-full border border-gray-200 px-4 py-3.5 focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-300 bg-white outline-none rounded hover:border-gray-300"
+                    className="w-full border shadow-none border-gray-200 px-4 py-3.5 focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-300 bg-white outline-none rounded hover:border-gray-300"
                     required
                   />
                 </div>
@@ -211,17 +178,17 @@ export default function ContactPage() {
                   name="message"
                   value={formData.message}
                   onChange={handleChange}
-                  rows="6"
+                  rows="10"
                   placeholder="How can we assist you with your real estate needs?"
-                  className="w-full border border-gray-200 px-4 py-3.5 focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-300 bg-white outline-none resize-none rounded hover:border-gray-300"
+                  className="w-full max-h-52 h-full border shadow-none border-gray-200 px-4 py-3.5 focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all duration-300 bg-white outline-none resize-none rounded hover:border-gray-300"
                   required
-                ></Textarea>
+                />
               </div>
 
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full bg-gradient-to-r from-primary to-primary/90 text-white py-4 rounded font-medium hover:shadow-lg transition-all duration-300 flex items-center justify-center group/btn transform hover:-translate-y-0.5 disabled:opacity-80 disabled:cursor-not-allowed"
+                className="w-full bg-gradient-to-r from-primary to-primary/90 text-white py-4 rounded font-medium hover:shadow transition-all duration-300 flex items-center justify-center group/btn transform hover:-translate-y-0.5 disabled:opacity-80 disabled:cursor-not-allowed"
               >
                 {isSubmitting ? (
                   <>
@@ -252,7 +219,7 @@ export default function ContactPage() {
           {/* Contact Info & Map */}
           <motion.div {...slideIn("right")} className="space-y-8">
             {/* Contact Information */}
-            <div className="bg-white p-8 rounded shadow-xl border border-gray-100/50 hover:shadow-2xl transition-all duration-500">
+            <div className="bg-white p-8 rounded shadow border border-gray-100/50 transition-all duration-500">
               <h3 className="text-2xl font-serif mb-8 text-gray-900 text-center">
                 Contact Information
               </h3>
@@ -263,7 +230,7 @@ export default function ContactPage() {
                     <Link
                       href={item.href}
                       key={index}
-                      className="flex items-center space-x-5 group cursor-pointer p-4 rounded-xl hover:bg-gray-50/50 transition-all duration-300"
+                      className="flex items-center space-x-5 group cursor-pointer p-4 rounded hover:bg-gray-50/50 transition-all duration-300"
                     >
                       <div className="p-3 rounded-full bg-gradient-to-br from-primary/5 to-yellow-400/5 group-hover:from-primary/10 group-hover:to-yellow-400/10 transition-colors duration-300 shadow-sm">
                         <Icon className="text-primary w-6 h-6" />
@@ -307,7 +274,7 @@ export default function ContactPage() {
             </div>
 
             {/* Business Hours */}
-            <div className="bg-gradient-to-br from-yellow-600/50 to-yellow-400/90 text-white p-8 rounded shadow-xl">
+            <div className="bg-gradient-to-br from-indigo-600/50 to-blue-400/90 text-white p-8 rounded shadow">
               <h3 className="text-xl font-serif mb-6 flex items-center">
                 <Clock className="mr-2 w-5 h-5" />
                 Business Hours
@@ -329,7 +296,7 @@ export default function ContactPage() {
             </div>
 
             {/* Google Map */}
-            <div className="bg-white rounded shadow-xl overflow-hidden border border-gray-100/50 hover:shadow-2xl transition-all duration-500">
+            <div className="bg-white rounded shadow overflow-hidden border border-gray-100/50 transition-all duration-500">
               <div className="p-4 bg-gray-50 border-b border-gray-100 flex items-center">
                 <MapPin className="w-4 h-4 text-primary mr-2" />
                 <span className="text-sm font-medium">Our Location</span>
@@ -346,59 +313,6 @@ export default function ContactPage() {
             </div>
           </motion.div>
         </div>
-
-        {/* Testimonials Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.6 }}
-          className="mt-24"
-        >
-          <div className="text-center mb-12">
-            <div className="inline-flex items-center justify-center mb-4">
-              <div className="w-8 h-px bg-primary mr-4"></div>
-              <span className="text-sm font-medium text-primary tracking-widest">
-                TESTIMONIALS
-              </span>
-              <div className="w-8 h-px bg-primary ml-4"></div>
-            </div>
-            <h2 className="text-3xl font-serif text-gray-900 mb-4">
-              What Our Clients Say
-            </h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
-              Don't just take our word for it. Here's what our clients have to
-              say about their experience with us.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {testimonials.map((testimonial) => (
-              <motion.div
-                key={testimonial.id}
-                whileHover={{ y: -5 }}
-                className="bg-white p-6 rounded shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300 group"
-              >
-                <div className="flex mb-4">
-                  {renderStars(testimonial.rating)}
-                </div>
-                <p className="text-gray-600 mb-6 italic">
-                  "{testimonial.content}"
-                </p>
-                <div className="flex items-center">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-r from-primary to-primary/80 flex items-center justify-center text-white font-bold mr-4">
-                    {testimonial.name.charAt(0)}
-                  </div>
-                  <div>
-                    <h4 className="font-medium text-gray-900">
-                      {testimonial.name}
-                    </h4>
-                    <p className="text-sm text-gray-500">{testimonial.role}</p>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
 
         {/* Call to Action */}
         <motion.div
