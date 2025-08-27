@@ -48,7 +48,7 @@ export const MenuToggle = ({ setIsMenuOpen, isMenuOpen }) => {
         <motion.line
           x1="4"
           y1="12"
-          x2="20"
+          x2="16"
           y2="12"
           variants={middleVariants}
           transition={{ duration: 0.3 }}
