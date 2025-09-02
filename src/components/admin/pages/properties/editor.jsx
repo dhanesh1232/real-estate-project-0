@@ -26,6 +26,7 @@ import {
   DEFAULT_LOCATION,
   DEFAULT_SEO,
   PROPERTY_CATEGORIES,
+  PROPERTY_STATUS,
 } from "./helper/default_data";
 import { SeoContainer } from "./meta";
 import { api_handles } from "@/lib/client/api_handles";
@@ -525,8 +526,8 @@ export const PropertyEditor = ({ propertyData, locationData, seoData }) => {
                         </SelectTrigger>
                         <SelectContent>
                           {PROPERTY_STATUS.map((each, ind) => (
-                            <SelectItem value={each.value} key={each.id + ind}>
-                              {each.label}
+                            <SelectItem value={each} key={each + ind}>
+                              {each}
                             </SelectItem>
                           ))}
                         </SelectContent>
