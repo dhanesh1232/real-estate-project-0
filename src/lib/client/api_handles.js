@@ -19,15 +19,34 @@ const fetchWithRetry = async (url, options, retries = 3) => {
     return err;
   }
 };
-const BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:3000/api";
+
+const BASE_URL = `/api`;
 
 export const api_handles = {
   fetchProperties: async (options = {}) => {
-    console.log("fetching.....");
     return fetchWithRetry(`${BASE_URL}/properties`, {
       method: "GET",
       headers,
       credentials: "include",
+      ...options,
+    });
+  },
+
+  AddNewProperty: async (form, options = {}) => {
+    return fetchWithRetry(`${BASE_URL}/properties`, {
+      method: "POST",
+      headers,
+      credentials: "include",
+      body: JSON.stringify(form),
+      ...options,
+    });
+  },
+  UpdateProperty: async (form, options = {}) => {
+    return fetchWithRetry(`${BASE_URL}/properties`, {
+      method: "PUT",
+      headers,
+      credentials: "include",
+      body: JSON.stringify(form),
       ...options,
     });
   },

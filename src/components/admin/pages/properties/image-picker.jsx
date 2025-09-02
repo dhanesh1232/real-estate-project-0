@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -19,17 +19,21 @@ import {
   Upload,
   X,
   Search,
-  Loader,
   Check,
   VideoIcon,
-  FileIcon,
-  Grid3X3,
   List,
   FolderOpen,
 } from "lucide-react";
 import { toast } from "sonner";
+import { FiGrid } from "react-icons/fi";
 
-export const ImagePickerModal = ({ onSelect, multiple = false, children }) => {
+export const ImagePickerModal = ({
+  defaultMedia,
+  onSelect,
+  multiple = false,
+  trigger,
+  children,
+}) => {
   const [open, setOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("media");
   const [searchQuery, setSearchQuery] = useState("");
@@ -40,6 +44,19 @@ export const ImagePickerModal = ({ onSelect, multiple = false, children }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [viewMode, setViewMode] = useState("grid"); // 'grid' or 'list'
 
+  // Initialize selected items when modal opens
+  useEffect(() => {
+    if (open) {
+      setSelectedItems(
+        defaultMedia
+          ? Array.isArray(defaultMedia)
+            ? defaultMedia
+            : [defaultMedia]
+          : []
+      );
+    }
+  }, [open, defaultMedia]);
+
   // Fetch media from your API (Cloudinary/ImageKit)
   const fetchMedia = useCallback(async () => {
     try {
@@ -48,8 +65,8 @@ export const ImagePickerModal = ({ onSelect, multiple = false, children }) => {
       const response = await fetch(`/api/media?search=${searchQuery}`);
       const data = await response.json();
       setMediaItems(data.data);
+      console.log(mediaItems);
     } catch (error) {
-      console.error("Error fetching media:", error);
       toast.error("Failed to load media");
     } finally {
       setIsLoading(false);
@@ -98,7 +115,6 @@ export const ImagePickerModal = ({ onSelect, multiple = false, children }) => {
         toast.error(data.error || "Upload failed");
       }
     } catch (err) {
-      console.error("Upload error:", err);
       toast.error("Something went wrong");
     } finally {
       setUploading(false);
@@ -113,18 +129,20 @@ export const ImagePickerModal = ({ onSelect, multiple = false, children }) => {
           : [...prev, item]
       );
     } else {
-      setSelectedItems([item]);
+      // For single selection, toggle selection
+      setSelectedItems((prev) =>
+        prev.some((selected) => selected.fileId === item.fileId) ? [] : [item]
+      );
     }
   };
 
-  const handleRemoveSelected = (itemId) => {
-    setSelectedItems((prev) => prev.filter((item) => item.fileId !== itemId));
-  };
-
   const handleConfirmSelection = () => {
-    onSelect(multiple ? selectedItems : selectedItems[0]);
+    if (multiple) {
+      onSelect(selectedItems);
+    } else {
+      onSelect(selectedItems[0] || null);
+    }
     setOpen(false);
-    setSelectedItems([]);
   };
 
   const handleFileDrop = (e) => {
@@ -141,7 +159,15 @@ export const ImagePickerModal = ({ onSelect, multiple = false, children }) => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>{children}</DialogTrigger>
+      <DialogTrigger asChild>
+        {trigger ? (
+          React.cloneElement(trigger, { onClick: () => setOpen(true) })
+        ) : (
+          <Button type="button" variant="outline">
+            {children}
+          </Button>
+        )}
+      </DialogTrigger>{" "}
       <DialogContent className="max-w-5xl h-[85vh] p-0 overflow-hidden flex flex-col">
         <DialogHeader className="px-6 py-4 border-b">
           <DialogTitle className="text-xl flex items-center gap-2">
@@ -193,12 +219,12 @@ export const ImagePickerModal = ({ onSelect, multiple = false, children }) => {
                   onClick={() =>
                     setViewMode(viewMode === "grid" ? "list" : "grid")
                   }
-                  className="h-10 w-10"
+                  className="h-10 w-10 cursor-pointer"
                 >
                   {viewMode === "grid" ? (
                     <List className="h-4 w-4" />
                   ) : (
-                    <Grid3X3 className="h-4 w-4" />
+                    <FiGrid className="h-4 w-4" />
                   )}
                 </Button>
               </div>
@@ -208,8 +234,8 @@ export const ImagePickerModal = ({ onSelect, multiple = false, children }) => {
                   <div
                     className={
                       viewMode === "grid"
-                        ? "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"
-                        : "space-y-3"
+                        ? "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2"
+                        : "space-y-2"
                     }
                   >
                     {Array.from({ length: 12 }).map((_, i) =>
@@ -226,9 +252,9 @@ export const ImagePickerModal = ({ onSelect, multiple = false, children }) => {
                       ) : (
                         <div
                           key={i}
-                          className="flex items-center gap-3 p-3 border rounded-md"
+                          className="flex items-center gap-3 p-3 border rounded"
                         >
-                          <Skeleton className="h-16 w-16 rounded-md" />
+                          <Skeleton className="h-16 w-16 rounded" />
                           <div className="space-y-2 flex-1">
                             <Skeleton className="h-4 w-2/3" />
                             <Skeleton className="h-3 w-1/3" />
@@ -242,7 +268,7 @@ export const ImagePickerModal = ({ onSelect, multiple = false, children }) => {
                 <div
                   className={
                     viewMode === "grid"
-                      ? "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 overflow-auto flex-1 pb-4"
+                      ? "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 overflow-auto flex-1 pb-4"
                       : "space-y-2 overflow-auto flex-1 pb-4"
                   }
                 >
@@ -300,14 +326,14 @@ export const ImagePickerModal = ({ onSelect, multiple = false, children }) => {
                     ) : (
                       <div
                         key={item.fileId}
-                        className={`flex items-center gap-3 p-3 border rounded-md cursor-pointer transition-colors group ${
+                        className={`flex items-center gap-3 p-3 border rounded cursor-pointer transition-colors group ${
                           isSelected
                             ? "bg-primary/10 border-primary"
                             : "hover:bg-muted/50"
                         }`}
                         onClick={() => handleSelect(item)}
                       >
-                        <div className="relative w-16 h-16 rounded-md overflow-hidden flex-shrink-0">
+                        <div className="relative w-16 h-16 rounded overflow-hidden flex-shrink-0">
                           {item.mime?.startsWith("video") ? (
                             <>
                               <video
@@ -346,7 +372,7 @@ export const ImagePickerModal = ({ onSelect, multiple = false, children }) => {
                   })}
                 </div>
               ) : (
-                <div className="flex flex-col items-center justify-center h-full bg-muted/10 rounded-lg p-8">
+                <div className="flex flex-col items-center justify-center h-full bg-muted/10 rounded p-8">
                   <FolderOpen className="h-16 w-16 text-muted-foreground mb-4" />
                   <p className="text-muted-foreground text-sm mb-2 font-medium">
                     No media files found
@@ -370,7 +396,7 @@ export const ImagePickerModal = ({ onSelect, multiple = false, children }) => {
 
             <TabsContent value="upload" className="flex-1 mt-0 px-6">
               <div
-                className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-12 text-center hover:border-primary/50 transition-colors bg-muted/10"
+                className="border-2 border-dashed border-muted-foreground/25 rounded p-12 text-center hover:border-primary/50 transition-colors bg-muted/10"
                 onDrop={handleFileDrop}
                 onDragOver={handleDragOver}
               >
@@ -401,7 +427,7 @@ export const ImagePickerModal = ({ onSelect, multiple = false, children }) => {
               </div>
 
               {uploading && (
-                <div className="mt-6 space-y-2 bg-muted/10 p-4 rounded-lg">
+                <div className="mt-6 space-y-2 bg-muted/10 p-4 rounded">
                   <div className="flex justify-between text-sm font-medium">
                     <span>Uploading files...</span>
                     <span>{uploadProgress}%</span>
@@ -412,53 +438,20 @@ export const ImagePickerModal = ({ onSelect, multiple = false, children }) => {
             </TabsContent>
           </Tabs>
 
-          {/* Selected items preview */}
-          {selectedItems.length > 0 && (
-            <div className="border-t px-6 py-4 bg-muted/10">
-              <h3 className="text-sm font-medium mb-3">Selected Items</h3>
-              <div className="flex gap-2 overflow-x-auto pb-1">
-                {selectedItems.map((item) => (
-                  <div
-                    key={item.fileId}
-                    className="relative group flex-shrink-0"
-                  >
-                    <div className="w-16 h-16 rounded-md overflow-hidden border bg-muted">
-                      {item.mime?.startsWith("video") ? (
-                        <video
-                          src={item.url}
-                          className="w-full h-full object-cover"
-                          muted
-                          playsInline
-                        />
-                      ) : (
-                        <img
-                          src={item.url}
-                          alt={item.name}
-                          className="w-full h-full object-cover"
-                        />
-                      )}
-                    </div>
-                    <button
-                      onClick={() => handleRemoveSelected(item.fileId)}
-                      className="absolute -top-1 -right-1 bg-destructive rounded-full p-0.5 opacity-0 group-hover:opacity-100 transition-opacity shadow-sm"
-                    >
-                      <X className="h-3 w-3 text-destructive-foreground" />
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
           <div className="flex justify-between items-center px-6 py-4 border-t">
             <div className="text-sm text-muted-foreground">
               {selectedItems.length} of {multiple ? "multiple" : "1"} selected
             </div>
             <div className="flex gap-2">
-              <Button variant="outline" onClick={() => setOpen(false)}>
+              <Button
+                variant="outline"
+                className="cursor-pointer"
+                onClick={() => setOpen(false)}
+              >
                 Cancel
               </Button>
               <Button
+                className="cursor-pointer"
                 onClick={handleConfirmSelection}
                 disabled={selectedItems.length === 0}
               >

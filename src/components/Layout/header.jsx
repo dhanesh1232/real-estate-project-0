@@ -18,7 +18,6 @@ import { Join, ProfileHandle } from "./join-button";
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScroll, setIsScroll] = useState(false);
-  const [hoveredItem, setHoveredItem] = useState(null);
   const [scrolledPercentage, setScrolledPercentage] = useState(0);
   const headerRef = useRef(null);
   const path = usePathname();
@@ -112,7 +111,7 @@ const Header = () => {
             animate={{ y: 0, opacity: 1 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ ease: "easeInOut", duration: 0.3 }}
-            className={`max-w-full hidden sm:block mx-auto px-4 sm:px-6 bg-gradient-to-r from-slate-800 to-slate-900 border-b border-white/30 text-yellow-500 text-center`}
+            className={`max-w-full hidden sm:block mx-auto bg-gradient-to-r from-slate-800 to-slate-900 border-b border-white/30 text-yellow-500 text-center`}
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2 lg:space-x-4">
@@ -194,11 +193,7 @@ const Header = () => {
             <NavigationMenu>
               <NavigationMenuList className="space-x-2">
                 {NavLinks.map((item) => (
-                  <NavigationMenuItem
-                    key={item.id}
-                    onMouseEnter={() => setHoveredItem(item.id)}
-                    onMouseLeave={() => setHoveredItem(null)}
-                  >
+                  <NavigationMenuItem key={item.id}>
                     <NavigationMenuLink
                       href={item.href}
                       className={`px-3 py-2 font-medium tracking-wide transition-colors duration-300 relative group

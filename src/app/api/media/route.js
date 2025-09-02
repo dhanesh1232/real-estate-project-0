@@ -7,14 +7,14 @@ export async function GET(req) {
     const search = searchParams.get("search");
     let files;
     if (search) {
-      // Use proper searchQuery syntax for filtering files by name or tags
       files = await imagekit.listFiles({
         limit: 10,
         skip: 0,
         searchQuery: `name LIKE "${search}*" OR tags IN ["${search}"]`,
+        path: "/dhamu",
       });
     } else {
-      files = await imagekit.listFiles({ limit: 10, skip: 0 });
+      files = await imagekit.listFiles({ limit: 10, skip: 0, path: "/dhamu" });
     }
 
     return SuccessHandles.Ok("Fetched Images", files); // Return files data in success response
@@ -39,12 +39,14 @@ export async function POST(req) {
       const arrayBuffer = await file.arrayBuffer();
       const buffer = Buffer.from(arrayBuffer);
 
-      // keep original extension
-      const fileName = file.name || "upload_" + Date.now();
+      const ext = file.name?.split(".").pop() || "";
+      const fileName = file.name || `upload_${Date.now()}.${ext}`;
 
       const result = await imagekit.upload({
         file: buffer,
         fileName,
+        useUniqueFileName: true, // prevents overwrites
+        folder: "dhamu", // optional: keep things organized
       });
 
       uploadedFiles.push(result);

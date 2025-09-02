@@ -19,8 +19,14 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { useState } from "react";
+import Image from "next/image";
 
-export const PropertiesPreviewPage = ({ form, featuredImage, mediaFiles }) => {
+export const PropertiesPreviewPage = ({
+  location,
+  form,
+  featuredImage,
+  mediaFiles,
+}) => {
   // Combine featured image with other media files
   const allMedia = mediaFiles;
   const [activeImageIndex, setActiveImageIndex] = useState(0);
@@ -34,7 +40,7 @@ export const PropertiesPreviewPage = ({ form, featuredImage, mediaFiles }) => {
       maximumFractionDigits: 0,
     }).format(price);
   };
-
+  console.log(location);
   // Get category label
   const getCategoryLabel = () => {
     switch (form.category) {
@@ -95,7 +101,7 @@ export const PropertiesPreviewPage = ({ form, featuredImage, mediaFiles }) => {
               <span className="text-sm text-gray-600 mt-1">Ankanam</span>
             </div>
             <div className="flex flex-col items-center text-center p-4 bg-blue-50 rounded">
-              <DollarSign className="h-8 w-8 text-blue-600 mb-2" />
+              <span className="h-8 text-4xl w-8 text-blue-600 mb-2">₹</span>
               <span className="font-bold text-xl">
                 {formatPrice(form.price)}
               </span>
@@ -206,9 +212,36 @@ export const PropertiesPreviewPage = ({ form, featuredImage, mediaFiles }) => {
             <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
               {form.title || "Property Title"}
             </h1>
-            <div className="flex items-center gap-2 text-gray-600 mb-4">
-              <MapPin className="h-5 w-5" />
-              <span>{form.location || "Location not specified"}</span>
+            <div className="flex flex-col gap-2 text-gray-600 mb-4">
+              <div className="flex items-center gap-2">
+                <MapPin className="h-5 w-5" />
+                <span className="font-medium">
+                  {location.address || "Not Specified"}
+                </span>
+              </div>
+              {location && (
+                <div className="flex items-center gap-2 text-sm">
+                  {location.city && (
+                    <>
+                      <span>{location.city}</span>
+                      <span>•</span>
+                    </>
+                  )}
+                  {location.state && (
+                    <>
+                      <span>{location.state}</span>
+                      <span>•</span>
+                    </>
+                  )}
+                  {location.country && (
+                    <>
+                      <span>{location.country}</span>
+                      <span>•</span>
+                    </>
+                  )}
+                  {location.pincode && <span>{location.pincode}</span>}
+                </div>
+              )}
             </div>
           </div>
 
@@ -244,10 +277,12 @@ export const PropertiesPreviewPage = ({ form, featuredImage, mediaFiles }) => {
                 controls
               />
             ) : (
-              <img
+              <Image
+                width={800}
+                height={600}
                 src={featuredImage.url}
                 alt="Featured Image"
-                className="w-full h-full object-cover cursor-pointer"
+                className="w-full h-full object-cover"
               />
             )}
           </div>

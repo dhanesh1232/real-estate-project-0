@@ -1,9 +1,9 @@
 "use client";
 import { motion } from "framer-motion";
 
-export default function PulseLoader() {
+export const Loader = () => {
   return (
-    <div className="flex items-center justify-center h-screen bg-white">
+    <>
       <motion.div
         initial={{ scale: 0.8, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
@@ -97,6 +97,13 @@ export default function PulseLoader() {
           }
         }
       `}</style>
+    </>
+  );
+};
+export default function PulseLoader() {
+  return (
+    <div className="flex items-center justify-center h-screen bg-white">
+      <Loader />
     </div>
   );
 }

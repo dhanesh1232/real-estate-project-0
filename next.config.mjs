@@ -2,6 +2,7 @@
 const nextConfig = {
   images: {
     remotePatterns: [
+      { protocol: "https", hostname: "ik.imagekit.io" },
       {
         protocol: "https",
         hostname: "randomuser.me",

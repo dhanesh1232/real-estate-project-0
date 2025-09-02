@@ -26,7 +26,12 @@ export function Join() {
       ) : (
         <>
           {session.user.role === "admin" && (
-            <Button variant="primary" className="w-full md:w-auto" asChild>
+            <Button
+              variant="primary"
+              size="sm"
+              className="w-full md:w-auto"
+              asChild
+            >
               <Link href="/admin" target="_blank">
                 Admin
               </Link>

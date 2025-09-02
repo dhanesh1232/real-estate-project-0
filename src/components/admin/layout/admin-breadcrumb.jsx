@@ -31,13 +31,17 @@ export function AdminBreadcrumb() {
                   <>
                     <BreadcrumbLink asChild>
                       <Link href={href} className="capitalize">
-                        {segment.replace(/-/g, " ")}
+                        {segment === "admin"
+                          ? "Dashboard"
+                          : segment.replace(/-/g, " ")}
                       </Link>
                     </BreadcrumbLink>
                   </>
                 ) : (
                   <BreadcrumbPage className="capitalize">
-                    {segment.replace(/-/g, " ")}
+                    {segment === "admin"
+                      ? "Dashboard"
+                      : segment.replace(/-/g, " ")}
                   </BreadcrumbPage>
                 )}
               </BreadcrumbItem>
