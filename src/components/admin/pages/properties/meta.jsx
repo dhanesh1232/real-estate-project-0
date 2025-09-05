@@ -1,21 +1,17 @@
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import React from "react";
 import Keywords from "./multi-text";
 import { InputWithLabel } from "./helper/compo";
+import { Separator } from "@/components/ui/separator";
 
 export function SeoContainer({ metadata, onChangeMeta }) {
-  console.log("Metadata", metadata);
   const [isExpanded, setIsExpanded] = React.useState(false);
   const [activeTab, setActiveTab] = React.useState("desktop");
 
   const getPreviewUrl = () => {
-    const baseUrl =
-      process.env.NEXT_PUBLIC_SITE_URL ||
-      process.env.NEXTAUTH_URL ||
-      window.location.origin;
+    const baseUrl = process.env.NEXTAUTH_URL || window.location.origin;
     return `${baseUrl}/${metadata.slug || "page-url"}`;
   };
 
@@ -56,50 +52,8 @@ export function SeoContainer({ metadata, onChangeMeta }) {
       </div>
 
       {isExpanded && (
-        <div className="p-4 space-y-2">
-          {/* Preview Section */}
-          <div className="bg-white rounded border p-4">
-            <div className="mb-4 flex space-x-4 border-b">
-              <button
-                className={`pb-2 px-4 ${
-                  activeTab === "desktop"
-                    ? "border-b-2 border-blue-500 text-blue-600"
-                    : "text-gray-500"
-                }`}
-                onClick={() => setActiveTab("desktop")}
-              >
-                Desktop
-              </button>
-              <button
-                className={`pb-2 px-4 ${
-                  activeTab === "mobile"
-                    ? "border-b-2 border-blue-500 text-blue-600"
-                    : "text-gray-500"
-                }`}
-                onClick={() => setActiveTab("mobile")}
-              >
-                Mobile
-              </button>
-            </div>
-
-            <div
-              className={`preview-container ${
-                activeTab === "mobile" ? "max-w-[375px]" : "w-full"
-              }`}
-            >
-              <div className="mb-2 text-xs text-gray-500">
-                {getPreviewUrl()}
-              </div>
-              <h2 className="text-xl text-blue-800 hover:underline mb-1">
-                {metadata.title || "Page Title"}
-              </h2>
-              <p className="text-sm text-gray-800 mb-1">
-                {metadata.description ||
-                  "Page description will appear here. Make it compelling for better click-through rates."}
-              </p>
-            </div>
-          </div>
-          <div className="grid grid-cols-1 gap-2">
+        <div className="space-y-2">
+          <div className="grid grid-cols-1 space-y-1.5 p-4">
             {/* Input Fields Section */}
             <div className="flex flex-col space-y-4">
               <InputWithLabel
@@ -148,6 +102,51 @@ export function SeoContainer({ metadata, onChangeMeta }) {
                 placeholder="Enter image URL for social sharing"
                 onChange={(val) => onChangeMeta("ogImage", val.target.value)}
               />
+            </div>
+          </div>
+          <Separator />
+          {/* Preview Section */}
+          <div className="bg-white p-4">
+            <div className="mb-4 flex space-x-4 border-b">
+              {[
+                {
+                  label: "Desktop",
+                  value: "desktop",
+                },
+                {
+                  label: "Mobile",
+                  value: "mobile",
+                },
+              ].map((item) => (
+                <button
+                  key={item.value}
+                  className={`pb-2 px-4 cursor-pointer ${
+                    activeTab === item.value
+                      ? "border-b-2 border-blue-500 text-blue-600"
+                      : "text-gray-500"
+                  }`}
+                  onClick={() => setActiveTab(item.value)}
+                >
+                  {item.label}
+                </button>
+              ))}
+            </div>
+
+            <div
+              className={`preview-container ${
+                activeTab === "mobile" ? "max-w-[375px]" : "w-full"
+              }`}
+            >
+              <div className="mb-2 text-xs text-gray-500">
+                {getPreviewUrl()}
+              </div>
+              <h2 className="text-xl text-blue-800 hover:underline mb-1">
+                {metadata.title || "Page Title"}
+              </h2>
+              <p className="text-sm text-gray-800 mb-1">
+                {metadata.description ||
+                  "Page description will appear here. Make it compelling for better click-through rates."}
+              </p>
             </div>
           </div>
         </div>

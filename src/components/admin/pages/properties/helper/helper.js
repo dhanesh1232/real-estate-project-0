@@ -20,3 +20,11 @@ export const isEqual = (a, b) => JSON.stringify(a) === JSON.stringify(b);
 export const convertUnderscoreSmall = (value) => {
   return value.replace(" ", "-").toLowerCase();
 };
+export const formatPrice = (price) => {
+  if (!price) return "₹0";
+  return new Intl.NumberFormat("en-IN", {
+    style: "currency",
+    currency: "INR",
+    maximumFractionDigits: 0,
+  }).format(price);
+};

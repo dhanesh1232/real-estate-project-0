@@ -125,7 +125,7 @@ export default function LoginPage() {
               onClick={handleGoogleSignIn}
               disabled={isLoading}
             >
-              <FcGoogle className="h-5 w-5 lg:translate-y-8 lg:opacity-0 lg:group-hover:translate-y-0 lg:group-hover:opacity-100 transition-all duration-300 ease-in-out" />
+              <FcGoogle className="h-5 w-5" />
               <span className="text-gray-700 font-medium">
                 Sign in with Google
               </span>

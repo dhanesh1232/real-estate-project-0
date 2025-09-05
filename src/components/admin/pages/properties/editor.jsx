@@ -10,7 +10,18 @@ import {
 } from "@/components/ui/select";
 import { Label } from "@radix-ui/react-label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { X, Home, Eye, Save, ArrowLeft, Menu, PenBox } from "lucide-react";
+import {
+  X,
+  Home,
+  Eye,
+  Save,
+  ArrowLeft,
+  Menu,
+  PenBox,
+  Undo,
+  Trash,
+  MoveLeft,
+} from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
 import { PropertiesPreviewPage } from "./preview";
@@ -31,6 +42,7 @@ import {
 import { SeoContainer } from "./meta";
 import { api_handles } from "@/lib/client/api_handles";
 import { RenderTabContent, RenderTabs } from "./helper/compo";
+import { useRouter } from "next/navigation";
 
 export const PropertyEditor = ({ propertyData, locationData, seoData }) => {
   const [form, setForm] = useState(propertyData);
@@ -39,6 +51,7 @@ export const PropertyEditor = ({ propertyData, locationData, seoData }) => {
   const [location, setLocationData] = useState(locationData);
   const [featuredImage, setFeaturedImage] = useState(null);
   const [mediaFiles, setMediaFiles] = useState([]);
+  const router = useRouter();
 
   const [currentMode, setCurrentMode] = useState("editing");
   const [errors, setErrors] = useState({});
@@ -46,26 +59,50 @@ export const PropertyEditor = ({ propertyData, locationData, seoData }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("basic");
 
-  useEffect(() => {
-    const hasChanges =
-      !isEqual(form, propertyData) ||
-      !isEqual(seoMeta, propertyData?.seoMeta || {}) ||
-      !isEqual(location, propertyData?.location || {}) ||
-      !isEqual(featuredImage, propertyData?.featuredImage || null) ||
-      !isEqual(mediaFiles, propertyData?.mediaFiles || []);
-
-    setIsChange(hasChanges);
-  }, [form, seoMeta, location, featuredImage, mediaFiles, propertyData]);
+  // Store initial data to compare against
+  const [initialForm, setInitialForm] = useState(propertyData);
+  const [initialSeoMeta, setInitialSeoMeta] = useState(seoData);
+  const [initialLocation, setInitialLocation] = useState(locationData);
+  const [initialFeaturedImage, setInitialFeaturedImage] = useState(null);
+  const [initialMediaFiles, setInitialMediaFiles] = useState([]);
 
   useEffect(() => {
     if (propertyData) {
       setForm(propertyData);
+      setInitialForm(propertyData);
       setSeoMeta(propertyData.seoMeta || DEFAULT_SEO);
+      setInitialSeoMeta(propertyData.seoMeta || DEFAULT_SEO);
       setLocationData(propertyData.location || DEFAULT_LOCATION);
+      setInitialLocation(propertyData.location || DEFAULT_LOCATION);
       setFeaturedImage(propertyData.featuredImage || null);
+      setInitialFeaturedImage(propertyData.featuredImage || null);
       setMediaFiles(propertyData.mediaFiles || []);
+      setInitialMediaFiles(propertyData.mediaFiles || []);
     }
   }, [propertyData]);
+
+  // Check for changes
+  useEffect(() => {
+    const hasChanges =
+      !isEqual(form, initialForm) ||
+      !isEqual(seoMeta, initialSeoMeta) ||
+      !isEqual(location, initialLocation) ||
+      !isEqual(featuredImage, initialFeaturedImage) ||
+      !isEqual(mediaFiles, initialMediaFiles);
+
+    setIsChange(hasChanges);
+  }, [
+    form,
+    seoMeta,
+    location,
+    featuredImage,
+    mediaFiles,
+    initialForm,
+    initialSeoMeta,
+    initialLocation,
+    initialFeaturedImage,
+    initialMediaFiles,
+  ]);
 
   useEffect(() => {
     if (form.category === "plot" || form.category === "land") {
@@ -307,15 +344,34 @@ export const PropertyEditor = ({ propertyData, locationData, seoData }) => {
         locationsData: location,
         seoMeta,
       };
-      const res = await api_handles.AddNewProperty(data);
+      const res = propertyData
+        ? await api_handles.UpdateProperty(propertyData._id, data)
+        : await api_handles.AddNewProperty(data);
       if (res.status && !res.ok) {
         const value = await res.json();
         throw new Error(
-          value.message || "Unable to add property please try again"
+          value.message ||
+            `Unable to ${
+              propertyData ? "update" : "add"
+            } property please try again`
         );
       }
 
+      // Update initial state to current state after successful save
+      setInitialForm(form);
+      setInitialSeoMeta(seoMeta);
+      setInitialLocation(location);
+      setInitialFeaturedImage(featuredImage);
+      setInitialMediaFiles(mediaFiles);
+      setIsChange(false);
+
+      /// Handle path change
+      !propertyData && router.replace(`/admin/properties/${res.data._id}`);
+
       setIsSaving(false);
+      toast.success(
+        `Property ${propertyData ? "updated" : "saved"} successfully`
+      );
     } catch (err) {
       setIsSaving(false);
       toast.error(err.message);
@@ -324,10 +380,39 @@ export const PropertyEditor = ({ propertyData, locationData, seoData }) => {
     }
   };
 
+  const handleDelete = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await api_handles.DeleteProperty(propertyData._id);
+      if (res.status && !res.ok) {
+        const value = await res.json();
+        throw new Error(
+          value.message || "Unable to delete property please try again"
+        );
+      }
+      router.replace("/admin/properties");
+      toast.success("Property deleted successfully");
+    } catch (err) {
+      toast.error(err.message);
+    }
+  };
+
+  // Reset form to initial state
+  const handleDiscardChanges = () => {
+    setForm(initialForm);
+    setSeoMeta(initialSeoMeta);
+    setLocationData(initialLocation);
+    setFeaturedImage(initialFeaturedImage);
+    setMediaFiles(initialMediaFiles);
+    setErrors({});
+    setIsChange(false);
+    toast.success("Changes discarded");
+  };
+
   // Get category icon based on selection
   const getCategoryIcon = () => {
     const category = PROPERTY_CATEGORIES.find((c) => c.value === form.category);
-    const Icon = Icons[category.icon];
+    const Icon = Icons[category?.icon] || Home;
     return category ? (
       <Icon className="h-4 w-4 text-gray-400" />
     ) : (
@@ -338,7 +423,7 @@ export const PropertyEditor = ({ propertyData, locationData, seoData }) => {
   return (
     <div className="min-h-full bg-background">
       {/* Mobile Header */}
-      <div className="bg-white border-b sticky z-20 top-12 border-gray-200 px-4 py-3 flex items-center justify-between md:hidden">
+      <div className="bg-white border-b sticky z-20 top-12 border-gray-200 px-2.5 py-3 flex items-center justify-between md:hidden">
         <div className="flex items-center gap-3">
           {currentMode === "preview" ? (
             <Button
@@ -372,6 +457,7 @@ export const PropertyEditor = ({ propertyData, locationData, seoData }) => {
                 variant="outline"
                 className="gap-2 cursor-pointer"
                 onClick={handleChangeMode}
+                size="sm"
               >
                 {currentMode === "preview" ? (
                   <>
@@ -390,15 +476,48 @@ export const PropertyEditor = ({ propertyData, locationData, seoData }) => {
               {currentMode === "preview" ? "Edit" : "Preview"}
             </TooltipContent>
           </Tooltip>
-          <Button
-            onClick={handleSubmit}
-            disabled={isSaving || isChange}
-            size="sm"
-            className="gap-1 bg-blue-600 cursor-pointer hover:bg-blue-700"
-          >
-            <Save className="h-4 w-4" />
-            <span className="sr-only sm:not-sr-only">Save</span>
-          </Button>
+
+          {/* Show action buttons only when there are changes */}
+          {isChange && (
+            <>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="gap-1 cursor-pointer"
+                    onClick={handleDiscardChanges}
+                  >
+                    <Undo className="h-4 w-4" />
+                    <span className="sr-only sm:not-sr-only">Discard</span>
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="bottom">Discard Changes</TooltipContent>
+              </Tooltip>
+              <Button
+                onClick={handleSubmit}
+                disabled={isSaving}
+                size="sm"
+                className="gap-1 bg-blue-600 cursor-pointer hover:bg-blue-700"
+              >
+                <Save className="h-4 w-4" />
+                <span className="sr-only sm:not-sr-only">
+                  {propertyData ? "Update" : "Save"}
+                </span>
+              </Button>
+            </>
+          )}
+          {propertyData && (
+            <Button
+              onClick={handleDelete}
+              disabled={isSaving}
+              size="sm"
+              className="gap-2 bg-red-600 cursor-pointer hover:bg-red-700"
+            >
+              <Trash className="h-4 w-4" />
+              <span className="sr-only sm:not-sr-only">Delete</span>
+            </Button>
+          )}
         </div>
       </div>
 
@@ -417,13 +536,20 @@ export const PropertyEditor = ({ propertyData, locationData, seoData }) => {
           ) : (
             <Button variant="ghost" size="icon" className="rounded" asChild>
               <Link href="/admin/properties">
-                <ArrowLeft className="h-5 w-7" />
+                <MoveLeft className="h-5 w-7" />
               </Link>
             </Button>
           )}
           <div>
             <h1 className="text-xl font-semibold text-gray-900">
-              {propertyData ? "Edit Property" : "Add Property"}
+              {propertyData ? (
+                <span>
+                  Edit Property -{" "}
+                  <span className="text-gray-400">{form.title}</span>
+                </span>
+              ) : (
+                "Add Property"
+              )}
             </h1>
             <p className="text-sm text-gray-500">
               {propertyData ? "Update existing" : "Create a new"} property
@@ -456,20 +582,45 @@ export const PropertyEditor = ({ propertyData, locationData, seoData }) => {
               {currentMode === "preview" ? "Edit" : "Preview"}
             </TooltipContent>
           </Tooltip>
-          <Button
-            onClick={handleSubmit}
-            disabled={isSaving || isChange}
-            className="gap-2 bg-blue-600 cursor-pointer hover:bg-blue-700"
-          >
-            {isSaving ? (
-              "Saving..."
-            ) : (
-              <>
-                <Save className="h-4 w-4" />
-                <span>Save Property</span>
-              </>
-            )}
-          </Button>
+
+          {/* Show action buttons only when there are changes */}
+          {isChange && (
+            <>
+              <Button
+                variant="outline"
+                className="gap-2 cursor-pointer"
+                onClick={handleDiscardChanges}
+              >
+                <Undo className="h-4 w-4" />
+                <span>Discard</span>
+              </Button>
+              <Button
+                onClick={handleSubmit}
+                disabled={isSaving}
+                className="gap-2 bg-blue-600 cursor-pointer hover:bg-blue-700"
+              >
+                {isSaving ? (
+                  "Saving..."
+                ) : (
+                  <>
+                    <Save className="h-4 w-4" />
+                    <span>{propertyData ? "Update" : "Save"} Property</span>
+                  </>
+                )}
+              </Button>
+            </>
+          )}
+          {propertyData && (
+            <Button
+              onClick={handleDelete}
+              disabled={isSaving}
+              size="sm"
+              className="gap-2 bg-red-600 cursor-pointer hover:bg-red-700"
+            >
+              <Trash className="h-4 w-4" />
+              <span>Delete Property</span>
+            </Button>
+          )}
         </div>
       </div>
 
@@ -669,6 +820,9 @@ export const PropertyEditor = ({ propertyData, locationData, seoData }) => {
                     handleAnkanamChange={handleAnkanamChange}
                     handleSqftChange={handleSqftChange}
                     handleAmenityChange={handleAmenityChange}
+                    setLocationData={setLocationData}
+                    setFeaturedImage={setFeaturedImage}
+                    setMediaFiles={setMediaFiles}
                   />
                 </div>
               </CardContent>

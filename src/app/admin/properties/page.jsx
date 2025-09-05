@@ -58,6 +58,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useDebounce } from "@/hooks/use-debounce";
 import { cn } from "@/lib/utils";
 import { FiGrid } from "react-icons/fi";
+import { formatPrice } from "@/components/admin/pages/properties/helper/helper";
 
 export default function PropertiesPage() {
   const [properties, setProperties] = useState([]);
@@ -156,15 +157,6 @@ export default function PropertiesPage() {
     sortBy,
     sortOrder,
   ]);
-
-  const formatPrice = (price) => {
-    if (!price) return "₹0";
-    return new Intl.NumberFormat("en-IN", {
-      style: "currency",
-      currency: "INR",
-      maximumFractionDigits: 0,
-    }).format(price);
-  };
 
   const formatArea = (property) => {
     if (property.sqft) return `${property.sqft.toLocaleString()} sq.ft.`;

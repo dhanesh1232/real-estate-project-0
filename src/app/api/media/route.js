@@ -3,19 +3,11 @@ import { ErrorHandles, SuccessHandles } from "@/lib/server/response";
 
 export async function GET(req) {
   try {
-    const { searchParams } = new URL(req.url);
-    const search = searchParams.get("search");
-    let files;
-    if (search) {
-      files = await imagekit.listFiles({
-        limit: 10,
-        skip: 0,
-        searchQuery: `name LIKE "${search}*" OR tags IN ["${search}"]`,
-        path: "/dhamu",
-      });
-    } else {
-      files = await imagekit.listFiles({ limit: 10, skip: 0, path: "/dhamu" });
-    }
+    const files = await imagekit.listFiles({
+      limit: 100,
+      skip: 0,
+      path: "/dhamu",
+    });
 
     return SuccessHandles.Ok("Fetched Images", files); // Return files data in success response
   } catch (err) {

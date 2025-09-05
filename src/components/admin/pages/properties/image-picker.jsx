@@ -1,7 +1,6 @@
 "use client";
 import React, { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   Dialog,
   DialogContent,
@@ -17,15 +16,25 @@ import { Skeleton } from "@/components/ui/skeleton";
 import {
   ImageIcon,
   Upload,
-  X,
-  Search,
   Check,
   VideoIcon,
   List,
   FolderOpen,
+  RefreshCcw,
+  Filter,
+  X,
+  Search,
 } from "lucide-react";
 import { toast } from "sonner";
 import { FiGrid } from "react-icons/fi";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
 
 export const ImagePickerModal = ({
   defaultMedia,
@@ -36,13 +45,15 @@ export const ImagePickerModal = ({
 }) => {
   const [open, setOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("media");
-  const [searchQuery, setSearchQuery] = useState("");
   const [mediaItems, setMediaItems] = useState([]);
+  const [filteredMedia, setFilteredMedia] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
-  const [viewMode, setViewMode] = useState("grid"); // 'grid' or 'list'
+  const [viewMode, setViewMode] = useState("grid");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortBy, setSortBy] = useState("newest");
 
   // Initialize selected items when modal opens
   useEffect(() => {
@@ -57,27 +68,58 @@ export const ImagePickerModal = ({
     }
   }, [open, defaultMedia]);
 
+  // Filter and sort media based on search and sort options
+  useEffect(() => {
+    let result = [...mediaItems];
+
+    // Apply search filter
+    if (searchQuery) {
+      result = result.filter((item) =>
+        item.name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+
+    // Apply sorting
+    switch (sortBy) {
+      case "newest":
+        result.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        break;
+      case "oldest":
+        result.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+        break;
+      case "name-asc":
+        result.sort((a, b) => a.name.localeCompare(b.name));
+        break;
+      case "name-desc":
+        result.sort((a, b) => b.name.localeCompare(a.name));
+        break;
+      default:
+        break;
+    }
+
+    setFilteredMedia(result);
+  }, [mediaItems, searchQuery, sortBy]);
+
   // Fetch media from your API (Cloudinary/ImageKit)
   const fetchMedia = useCallback(async () => {
     try {
       setIsLoading(true);
       // Replace with your actual API endpoint
-      const response = await fetch(`/api/media?search=${searchQuery}`);
+      const response = await fetch(`/api/media`);
       const data = await response.json();
-      setMediaItems(data.data);
-      console.log(mediaItems);
+      setMediaItems(data.data || []);
     } catch (error) {
       toast.error("Failed to load media");
     } finally {
       setIsLoading(false);
     }
-  }, [searchQuery]);
+  }, []);
 
   useEffect(() => {
     if (open && activeTab === "media") {
       fetchMedia();
     }
-  }, [open, activeTab, searchQuery, fetchMedia]);
+  }, [open, activeTab, fetchMedia]);
 
   const handleUpload = async (files) => {
     setUploading(true);
@@ -157,6 +199,10 @@ export const ImagePickerModal = ({
     e.preventDefault();
   };
 
+  const clearSelection = () => {
+    setSelectedItems([]);
+  };
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
@@ -167,9 +213,9 @@ export const ImagePickerModal = ({
             {children}
           </Button>
         )}
-      </DialogTrigger>{" "}
-      <DialogContent className="max-w-5xl h-[85vh] p-0 overflow-hidden flex flex-col">
-        <DialogHeader className="px-6 py-4 border-b">
+      </DialogTrigger>
+      <DialogContent className="max-w-4xl w-full gap-0 h-[85vh] p-0 overflow-hidden flex flex-col rounded">
+        <DialogHeader className="px-4 sm:px-6 py-4 flex flex-row items-center justify-between">
           <DialogTitle className="text-xl flex items-center gap-2">
             {multiple ? "Select Media" : "Select Featured Image"}
             {selectedItems.length > 0 && (
@@ -186,8 +232,8 @@ export const ImagePickerModal = ({
             onValueChange={setActiveTab}
             className="flex-1 flex flex-col overflow-hidden"
           >
-            <div className="px-6">
-              <TabsList className="grid w-full grid-cols-2 mb-4">
+            <div className="px-4 sm:px-6 pb-3 flex flex-col gap-3 border-b">
+              <TabsList className="grid w-full grid-cols-2">
                 <TabsTrigger value="media" className="flex items-center gap-2">
                   <ImageIcon className="h-4 w-4" />
                   Media Library
@@ -197,62 +243,133 @@ export const ImagePickerModal = ({
                   Upload
                 </TabsTrigger>
               </TabsList>
+
+              {activeTab === "media" && (
+                <div className="flex flex-col sm:flex-row gap-2 sm:items-center justify-between w-full">
+                  <div className="relative w-full sm:max-w-xs">
+                    <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      placeholder="Search media..."
+                      className="pl-8"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+                  </div>
+                  <div className="flex items-center gap-2 self-end sm:self-auto">
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={() => fetchMedia()}
+                      className="h-9 w-9"
+                      title="Refresh"
+                    >
+                      <RefreshCcw className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={() =>
+                        setViewMode(viewMode === "grid" ? "list" : "grid")
+                      }
+                      className="h-9 w-9"
+                      title={viewMode === "grid" ? "List view" : "Grid view"}
+                    >
+                      {viewMode === "grid" ? (
+                        <List className="h-4 w-4" />
+                      ) : (
+                        <FiGrid className="h-4 w-4" />
+                      )}
+                    </Button>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          variant="outline"
+                          className="h-9 gap-2 hover:bg-muted/50 transition-colors"
+                          title="Sort media"
+                        >
+                          <Filter className="h-4 w-4" />
+                          <span className="hidden sm:inline">Sort by:</span>
+                          <span className="font-medium">
+                            {
+                              {
+                                newest: "Newest",
+                                oldest: "Oldest",
+                                "name-asc": "A-Z",
+                                "name-desc": "Z-A",
+                              }[sortBy]
+                            }
+                          </span>
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent
+                        align="end"
+                        className="w-56 shadow-lg animate-in fade-in-0 zoom-in-95"
+                      >
+                        {[
+                          {
+                            label: "Newest first",
+                            value: "newest",
+                            icon: "↓",
+                          },
+                          {
+                            label: "Oldest first",
+                            value: "oldest",
+                            icon: "↑",
+                          },
+                          {
+                            label: "Name (A to Z)",
+                            value: "name-asc",
+                            icon: "A→Z",
+                          },
+                          {
+                            label: "Name (Z to A)",
+                            value: "name-desc",
+                            icon: "Z→A",
+                          },
+                        ].map((option) => (
+                          <DropdownMenuCheckboxItem
+                            key={option.value}
+                            checked={sortBy === option.value}
+                            onCheckedChange={() => setSortBy(option.value)}
+                            className="gap-2"
+                          >
+                            <span className="w-8 text-center text-muted-foreground">
+                              {option.icon}
+                            </span>
+                            <span>{option.label}</span>
+                          </DropdownMenuCheckboxItem>
+                        ))}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
+                </div>
+              )}
             </div>
 
             <TabsContent
               value="media"
-              className="flex-1 flex flex-col mt-0 overflow-hidden px-6"
+              className="flex-1 flex flex-col mt-0 overflow-hidden"
             >
-              <div className="flex items-center gap-2 mb-4">
-                <div className="relative flex-1">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    placeholder="Search media..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-10"
-                  />
-                </div>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={() =>
-                    setViewMode(viewMode === "grid" ? "list" : "grid")
-                  }
-                  className="h-10 w-10 cursor-pointer"
-                >
-                  {viewMode === "grid" ? (
-                    <List className="h-4 w-4" />
-                  ) : (
-                    <FiGrid className="h-4 w-4" />
-                  )}
-                </Button>
-              </div>
-
               {isLoading ? (
-                <div className="flex-1 overflow-auto">
+                <div className="flex-1 overflow-auto p-4 sm:p-6">
                   <div
                     className={
                       viewMode === "grid"
-                        ? "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2"
-                        : "space-y-2"
+                        ? "grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"
+                        : "space-y-3"
                     }
                   >
                     {Array.from({ length: 12 }).map((_, i) =>
                       viewMode === "grid" ? (
-                        <Card key={i} className="overflow-hidden">
+                        <Card key={i} className="overflow-hidden gap-0">
                           <CardContent className="p-0 aspect-square">
                             <Skeleton className="h-full w-full rounded-none" />
                           </CardContent>
-                          <div className="p-2 space-y-2">
-                            <Skeleton className="h-4 w-full" />
-                            <Skeleton className="h-3 w-1/2" />
-                          </div>
                         </Card>
                       ) : (
                         <div
                           key={i}
-                          className="flex items-center gap-3 p-3 border rounded"
+                          className="flex items-center gap-4 p-3 border rounded-lg"
                         >
                           <Skeleton className="h-16 w-16 rounded" />
                           <div className="space-y-2 flex-1">
@@ -264,15 +381,15 @@ export const ImagePickerModal = ({
                     )}
                   </div>
                 </div>
-              ) : mediaItems.length > 0 ? (
+              ) : filteredMedia.length > 0 ? (
                 <div
                   className={
                     viewMode === "grid"
-                      ? "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 overflow-auto flex-1 pb-4"
-                      : "space-y-2 overflow-auto flex-1 pb-4"
+                      ? "grid grid-cols-4 sm:grid-cols-5 md:grid-cols-4 gap-3 p-4 sm:p-6 overflow-auto flex-1"
+                      : "space-y-3 p-4 sm:p-6 overflow-auto flex-1"
                   }
                 >
-                  {mediaItems.map((item) => {
+                  {filteredMedia.map((item) => {
                     const isSelected = selectedItems.some(
                       (selected) => selected.fileId === item.fileId
                     );
@@ -280,13 +397,11 @@ export const ImagePickerModal = ({
                     return viewMode === "grid" ? (
                       <Card
                         key={item.fileId}
-                        className={`relative group cursor-pointer max-h-32 transition-all overflow-hidden ${
-                          isSelected ? "ring-2 ring-primary" : ""
-                        }`}
+                        className={`relative group cursor-pointer overflow-hidden gap-0 transition-all border-2`}
                         onClick={() => handleSelect(item)}
                       >
                         <CardContent className="p-0">
-                          <div className="aspect-square relative flex items-center justify-center bg-muted/30">
+                          <div className="aspect-square w-full h-full relative flex items-center justify-center bg-muted/20">
                             {item.mime?.startsWith("video") ? (
                               <div className="relative w-full h-full">
                                 <video
@@ -295,45 +410,43 @@ export const ImagePickerModal = ({
                                   muted
                                   playsInline
                                 />
-                                <div className="absolute bottom-2 right-2 bg-black/70 rounded-full p-1">
-                                  <VideoIcon className="h-3 w-3 text-white" />
+                                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
+                                  <VideoIcon className="h-8 w-8 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
                                 </div>
                               </div>
                             ) : (
-                              <img
-                                src={item.url}
-                                alt={item.name}
-                                className="w-full h-full object-cover"
-                              />
+                              <>
+                                <img
+                                  src={item.url}
+                                  alt={item.name}
+                                  className="w-full h-full object-cover"
+                                />
+                                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors" />
+                              </>
                             )}
 
                             {isSelected && (
-                              <div className="absolute top-2 right-2 bg-primary rounded-full p-1">
-                                <Check className="h-3 w-3 text-primary-foreground" />
+                              <div className="absolute top-2 right-2 bg-primary rounded-full p-1.5">
+                                <Check className="h-3.5 w-3.5 text-primary-foreground" />
                               </div>
                             )}
-                            <p className="text-xs absolute bottom-1 left-2 text-muted-foreground">
+                            <div className="absolute bottom-2 left-2 bg-black/70 text-white text-xs px-1.5 py-0.5 rounded">
                               {item.mime?.split("/")[1]?.toUpperCase()}
-                            </p>
-                          </div>
-                          <div className="p-1">
-                            <p className="text-xs font-medium truncate">
-                              {item.name}
-                            </p>
+                            </div>
                           </div>
                         </CardContent>
                       </Card>
                     ) : (
                       <div
                         key={item.fileId}
-                        className={`flex items-center gap-3 p-3 border rounded cursor-pointer transition-colors group ${
+                        className={`flex items-center gap-4 p-3 border rounded-lg cursor-pointer transition-colors group ${
                           isSelected
                             ? "bg-primary/10 border-primary"
                             : "hover:bg-muted/50"
                         }`}
                         onClick={() => handleSelect(item)}
                       >
-                        <div className="relative w-16 h-16 rounded overflow-hidden flex-shrink-0">
+                        <div className="relative w-16 h-16 rounded-md overflow-hidden flex-shrink-0">
                           {item.mime?.startsWith("video") ? (
                             <>
                               <video
@@ -354,17 +467,20 @@ export const ImagePickerModal = ({
                             />
                           )}
                         </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium truncate">
-                            {item.name}
-                          </p>
-                          <p className="text-xs text-muted-foreground">
-                            {item.mime?.split("/")[1]?.toUpperCase()}
-                          </p>
-                        </div>
+                        {viewMode === "list" && (
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium truncate">
+                              {item.name}
+                            </p>
+                            <p className="text-xs text-muted-foreground mt-1">
+                              {item.mime?.split("/")[1]?.toUpperCase()} •{" "}
+                              {new Date(item.createdAt).toLocaleDateString()}
+                            </p>
+                          </div>
+                        )}
                         {isSelected && (
-                          <div className="bg-primary rounded-full p-1">
-                            <Check className="h-3 w-3 text-primary-foreground" />
+                          <div className="bg-primary rounded-full p-1.5">
+                            <Check className="h-3.5 w-3.5 text-primary-foreground" />
                           </div>
                         )}
                       </div>
@@ -372,31 +488,41 @@ export const ImagePickerModal = ({
                   })}
                 </div>
               ) : (
-                <div className="flex flex-col items-center justify-center h-full bg-muted/10 rounded p-8">
-                  <FolderOpen className="h-16 w-16 text-muted-foreground mb-4" />
+                <div className="flex flex-col items-center justify-center h-full bg-muted/10 rounded-lg m-4 p-8">
+                  <FolderOpen className="h-16 w-16 text-muted-foreground mb-4 opacity-50" />
                   <p className="text-muted-foreground text-sm mb-2 font-medium">
-                    No media files found
+                    {searchQuery ? "No results found" : "No media files found"}
                   </p>
                   <p className="text-muted-foreground text-xs mb-4 text-center">
                     {searchQuery
-                      ? "Try a different search term"
+                      ? `No media matching "${searchQuery}"`
                       : "Upload your first file to get started"}
                   </p>
-                  <Button
-                    onClick={() => setActiveTab("upload")}
-                    className="flex items-center gap-2"
-                    size="sm"
-                  >
-                    <Upload className="h-4 w-4" />
-                    Upload Files
-                  </Button>
+                  {searchQuery ? (
+                    <Button
+                      onClick={() => setSearchQuery("")}
+                      variant="outline"
+                      size="sm"
+                    >
+                      Clear search
+                    </Button>
+                  ) : (
+                    <Button
+                      onClick={() => setActiveTab("upload")}
+                      className="flex items-center gap-2"
+                      size="sm"
+                    >
+                      <Upload className="h-4 w-4" />
+                      Upload Files
+                    </Button>
+                  )}
                 </div>
               )}
             </TabsContent>
 
-            <TabsContent value="upload" className="flex-1 mt-0 px-6">
+            <TabsContent value="upload" className="flex-1 mt-0 p-4 sm:p-6">
               <div
-                className="border-2 border-dashed border-muted-foreground/25 rounded p-12 text-center hover:border-primary/50 transition-colors bg-muted/10"
+                className="border-2 border-dashed rounded-lg p-8 text-center hover:border-primary/50 transition-colors bg-muted/10 flex flex-col items-center justify-center h-full"
                 onDrop={handleFileDrop}
                 onDragOver={handleDragOver}
               >
@@ -415,19 +541,22 @@ export const ImagePickerModal = ({
                   <h3 className="text-lg font-medium mb-2">
                     Drag & Drop or Click to Upload
                   </h3>
-                  <p className="text-sm text-muted-foreground mb-4">
+                  <p className="text-sm text-muted-foreground mb-6 max-w-md mx-auto">
                     {multiple
-                      ? "Select multiple images or videos"
-                      : "Select a single image or video"}
+                      ? "Select multiple images or videos to upload to your media library"
+                      : "Select a single image or video to upload to your media library"}
                   </p>
                   <Button asChild>
-                    <span>Browse Files</span>
+                    <span>Select Files</span>
                   </Button>
+                  <p className="text-xs text-muted-foreground mt-4">
+                    Supports JPG, PNG, GIF, WEBP, MP4, MOV
+                  </p>
                 </label>
               </div>
 
               {uploading && (
-                <div className="mt-6 space-y-2 bg-muted/10 p-4 rounded">
+                <div className="mt-6 space-y-2 bg-muted/10 p-4 rounded-lg">
                   <div className="flex justify-between text-sm font-medium">
                     <span>Uploading files...</span>
                     <span>{uploadProgress}%</span>
@@ -438,20 +567,25 @@ export const ImagePickerModal = ({
             </TabsContent>
           </Tabs>
 
-          <div className="flex justify-between items-center px-6 py-4 border-t">
-            <div className="text-sm text-muted-foreground">
-              {selectedItems.length} of {multiple ? "multiple" : "1"} selected
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 px-4 sm:px-6 py-4 border-t">
+            <div className="text-sm text-muted-foreground flex items-center gap-2">
+              {selectedItems.length} {multiple ? "files" : "file"} selected
+              {selectedItems.length > 0 && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={clearSelection}
+                  className="h-7 text-xs"
+                >
+                  Clear selection
+                </Button>
+              )}
             </div>
-            <div className="flex gap-2">
-              <Button
-                variant="outline"
-                className="cursor-pointer"
-                onClick={() => setOpen(false)}
-              >
+            <div className="flex gap-2 self-end sm:self-auto">
+              <Button variant="outline" onClick={() => setOpen(false)}>
                 Cancel
               </Button>
               <Button
-                className="cursor-pointer"
                 onClick={handleConfirmSelection}
                 disabled={selectedItems.length === 0}
               >

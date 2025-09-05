@@ -83,7 +83,7 @@ const propertySchema = new mongoose.Schema(
     },
     propertyStatus: {
       type: String,
-      enum: ["For Sale", "For Rent", "Sold", "Rented"],
+      enum: ["For Sale", "For Rent", "Sold", "Rented", ""],
       default: "For Sale",
     },
 
@@ -156,12 +156,13 @@ const propertySchema = new mongoose.Schema(
         "north-west",
         "south-east",
         "south-west",
+        "",
       ],
       lowercase: true,
     },
     furnishing: {
       type: String,
-      enum: ["furnished", "semi-furnished", "unfurnished"],
+      enum: ["furnished", "semi-furnished", "unfurnished", ""],
       lowercase: true,
     },
     nearbyLandmark: String,
@@ -177,7 +178,7 @@ const propertySchema = new mongoose.Schema(
     },
     waterSupply: {
       type: String,
-      enum: ["municipal", "borewell", "tank", "both"],
+      enum: ["municipal", "borewell", "tank", "both", ""],
       lowercase: true,
     },
     powerBackup: {

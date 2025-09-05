@@ -8,7 +8,7 @@ export default function AdminLayout({ children }) {
       <AppSidebar />
       <SidebarInset>
         <AdminHeader />
-        <main>{children}</main>
+        <div>{children}</div>
       </SidebarInset>
     </SidebarProvider>
   );

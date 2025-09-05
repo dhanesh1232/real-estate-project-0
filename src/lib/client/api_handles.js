@@ -1,3 +1,5 @@
+import { id } from "zod/v4/locales";
+
 const headers = { "Content-Type": "application/json" };
 
 async function handleResponse(res) {
@@ -41,12 +43,20 @@ export const api_handles = {
       ...options,
     });
   },
-  UpdateProperty: async (form, options = {}) => {
-    return fetchWithRetry(`${BASE_URL}/properties`, {
+  UpdateProperty: async (id, form, options = {}) => {
+    return fetchWithRetry(`${BASE_URL}/properties/${id}`, {
       method: "PUT",
       headers,
       credentials: "include",
       body: JSON.stringify(form),
+      ...options,
+    });
+  },
+  DeleteProperty: async (id, options = {}) => {
+    return fetchWithRetry(`${BASE_URL}/properties/${id}`, {
+      method: "DELETE",
+      headers,
+      credentials: "include",
       ...options,
     });
   },

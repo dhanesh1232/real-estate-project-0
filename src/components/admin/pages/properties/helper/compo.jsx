@@ -14,6 +14,7 @@ import {
   DollarSign,
   Home,
   ImageIcon,
+  IndianRupee,
   LandPlot,
   Layers,
   MapPin,
@@ -33,7 +34,7 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
-import { getAmenitiesByCategory } from "./helper";
+import { formatPrice, getAmenitiesByCategory } from "./helper";
 import {
   FACING_OPTIONS,
   FURNISHING_OPTIONS,
@@ -132,7 +133,7 @@ export const RenderTabs = ({ activeTab, setActiveTab }) => (
           key={tab}
           type="button"
           onClick={() => setActiveTab(tab)}
-          className={`py-1.5 px-3 cursor-pointer md:px-4 font-medium text-xs md:text-sm whitespace-nowrap rounded-t transition-colors flex-shrink-0 ${
+          className={`py-1.5 px-3 cursor-pointer md:px-4 font-medium text-xs md:text-sm whitespace-nowrap transition-colors flex-shrink-0 ${
             activeTab === tab
               ? "text-blue-700 border-b-2 border-blue-700 bg-blue-50/50"
               : "text-gray-500 hover:text-gray-700 hover:bg-gray-50"
@@ -184,24 +185,23 @@ export const RenderTabContent = ({
   handleAnkanamChange,
   handleSqftChange,
   handleAmenityChange,
+  setLocationData,
+  setFeaturedImage,
+  setMediaFiles,
 }) => {
   switch (activeTab) {
     case "basic":
       return (
         <div className="space-y-4">
-          <div>
-            <Label className="block mb-2 font-medium text-gray-700">
-              Title *
-            </Label>
-            <Input
-              placeholder="e.g. Spacious 3BHK Apartment with Mountain View"
-              value={form.title}
-              onChange={(e) => handleChange("title", e.target.value)}
-              className={`py-2 px-4 rounded ${
-                errors.title ? "border-red-500 focus:ring-red-500" : ""
-              }`}
-            />
-          </div>
+          <InputWithLabel
+            label="Title *"
+            placeholder="e.g. Spacious 3BHK Apartment with Mountain View"
+            value={form.title}
+            onChange={(e) => handleChange("title", e.target.value)}
+            className={`py-2 px-4 rounded ${
+              errors.title ? "border-red-500 focus:ring-red-500" : ""
+            }`}
+          />
 
           <div>
             <Label className="block mb-2 font-medium text-gray-700">
@@ -220,12 +220,15 @@ export const RenderTabContent = ({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
             <InputWithLabel
               label="Price (₹)"
-              icon={DollarSign}
+              icon={IndianRupee}
               type="number"
               placeholder="Enter price"
-              value={form.price}
+              value={!form.price ? "" : form.price}
               min={0}
-              onChange={(e) => handleChange("price", e.target.value)}
+              onChange={(e) => {
+                const price = e.target.value;
+                handleChange("price", price);
+              }}
             />
           </div>
           <Separator />
@@ -305,7 +308,7 @@ export const RenderTabContent = ({
                 errors={errors}
                 handleAnkanamChange={handleAnkanamChange}
                 handleSqftChange={handleSqftChange}
-                handleAmenityChange={handleAmenityChange}
+                handleChange={handleChange}
               />
             </div>
           )}
@@ -313,7 +316,13 @@ export const RenderTabContent = ({
       );
 
     case "amenities":
-      return <RenderAmenitiesSection form={form} />;
+      return (
+        <RenderAmenitiesSection
+          form={form}
+          handleChange={handleChange}
+          handleAmenityChange={handleAmenityChange}
+        />
+      );
 
     case "media":
       return (
@@ -422,7 +431,11 @@ export const RenderTabContent = ({
 };
 
 // Render amenities section with dynamic options
-const RenderAmenitiesSection = ({ form }) => {
+const RenderAmenitiesSection = ({
+  form,
+  handleChange,
+  handleAmenityChange,
+}) => {
   const categoryAmenities = getAmenitiesByCategory(form.category);
 
   return (

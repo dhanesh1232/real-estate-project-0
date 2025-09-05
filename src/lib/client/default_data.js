@@ -231,18 +231,18 @@ export const AdminLinks = [
     href: "/admin/properties",
     icon: "building",
   },
-  {
-    id: "blogs",
-    label: "Blog",
-    href: "/admin/blogs",
-    icon: "bookOpen",
-  },
   // {
-  //   id: "leads",
-  //   label: "Leads",
-  //   href: "/admin/leads",
-  //   icon: "userPlus",
+  //   id: "blogs",
+  //   label: "Blog",
+  //   href: "/admin/blogs",
+  //   icon: "bookOpen",
   // },
+  {
+    id: "leads",
+    label: "Leads",
+    href: "/admin/leads",
+    icon: "userPlus",
+  },
   // {
   //   id: "media",
   //   label: "Files",

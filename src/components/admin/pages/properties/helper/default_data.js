@@ -22,7 +22,7 @@ export const FACING_OPTIONS = [
 export const FURNISHING_OPTIONS = [
   { value: "unfurnished", label: "Unfurnished" },
   { value: "semi-furnished", label: "Semi-Furnished" },
-  { value: "fully-furnished", label: "Fully Furnished" },
+  { value: "furnished", label: "Fully Furnished" },
 ];
 
 // Water supply options

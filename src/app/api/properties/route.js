@@ -13,7 +13,7 @@ export async function POST(req) {
     const transformed = {
       ...body,
       // Location
-      location: body.locationData || {},
+      location: body.locationsData || {},
       // Ensure yearBuilt is just a number
       yearBuilt: body.yearBuilt
         ? new Date(body.yearBuilt).getFullYear()
@@ -30,7 +30,7 @@ export async function POST(req) {
         : undefined,
     };
 
-    delete transformed.locationData; // remove duplicate
+    delete transformed.locationsData; // remove duplicate
 
     // Create property
     const property = await Property.create(transformed);
