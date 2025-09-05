@@ -15,7 +15,6 @@ import { LogOut } from "lucide-react";
 
 export function Join() {
   const { data: session } = useSession();
-  console.log(session);
 
   return (
     <div className="flex items-center justify-between space-x-3 px-2">

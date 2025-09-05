@@ -398,9 +398,9 @@ const PropertyListingsPage = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-blue-100 to-indigo-50 text-primary pt-16 pb-4 px-4">
+      <div className="bg-gradient-to-r from-blue-100 to-indigo-50 text-primary pt-20 md:pt-16 pb-4 px-4">
         <div className="max-w-7xl mx-auto">
-          <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-2">
+          <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-0.5">
             Find Your Dream Property
           </h1>
           <p className="text-base md:text-lg text-slate-800 mb-1.5">

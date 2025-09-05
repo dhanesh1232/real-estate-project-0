@@ -1,7 +1,7 @@
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { AdminBreadcrumb } from "./admin-breadcrumb";
-import { NotificationBell } from "@/app/admin/compo/bell";
+import { NotificationBell } from "@/components/admin/layout/compo/bell";
 
 export const AdminHeader = () => {
   return (

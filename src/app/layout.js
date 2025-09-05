@@ -18,22 +18,43 @@ const geistMono = Geist_Mono({
 export const metadata = {
   title: "LuxEstate | Luxury Real Estate & Premium Properties",
   description:
-    "Discover exclusive luxury homes, premium properties, and high-end real estate listings. LuxEstate offers curated selections of prestigious properties, expert real estate services, and personalized property solutions.",
-  keywords:
-    "luxury real estate, premium properties, high-end homes, luxury apartments, exclusive listings, real estate investment, luxury property market",
+    "Explore luxury real estate, premium apartments, exclusive villas, and investment-ready properties. LuxEstate brings you curated high-end listings, trusted builders, and personalized real estate services.",
+  keywords: [
+    "luxury real estate",
+    "premium properties",
+    "high-end homes",
+    "luxury apartments",
+    "exclusive villas",
+    "real estate investment",
+    "exclusive listings",
+    "luxury property market",
+    "curated properties",
+    "trusted real estate services",
+  ],
   openGraph: {
     title: "LuxEstate | Luxury Real Estate & Premium Properties",
     description:
-      "Discover exclusive luxury homes and premium properties with LuxEstate. Your gateway to prestigious real estate.",
-    type: "website",
-    locale: "en_US",
+      "Discover exclusive luxury homes, villas, and premium real estate listings with LuxEstate. Your trusted gateway to prestigious properties worldwide.",
+    url: "https://luxestate.ecodrix.com",
     siteName: "LuxEstate",
+    locale: "en_US",
+    type: "website",
+    images: [
+      {
+        url: "/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "LuxEstate – Luxury Real Estate",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "LuxEstate | Luxury Real Estate",
+    title: "LuxEstate | Luxury Real Estate & Premium Properties",
     description:
-      "Discover exclusive luxury homes and premium properties with LuxEstate",
+      "Discover exclusive luxury homes, villas, and premium properties with LuxEstate. Curated listings, trusted realtors, and personalized solutions.",
+    images: ["/og-image.jpg"],
+    creator: "@luxestate",
   },
   robots: {
     index: true,
@@ -41,11 +62,15 @@ export const metadata = {
     googleBot: {
       index: true,
       follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
       "max-snippet": -1,
+      "max-image-preview": "large",
+      "max-video-preview": -1,
     },
   },
+  category: "real estate",
+  applicationName: "LuxEstate",
+  creator: "LuxEstate Team",
+  publisher: "LuxEstate Realty Pvt. Ltd.",
 };
 
 export default function RootLayout({ children }) {

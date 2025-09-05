@@ -4,17 +4,17 @@ import { motion } from "framer-motion";
 export const MenuToggle = ({ setIsMenuOpen, isMenuOpen }) => {
   const topVariants = {
     closed: { rotate: 0, y: 0 },
-    open: { rotate: 45, y: 6 },
+    open: { rotate: -45, y: 6 },
   };
 
   const middleVariants = {
     closed: { opacity: 1 },
-    open: { opacity: 0 },
+    open: { opacity: 0, x: 50 },
   };
 
   const bottomVariants = {
     closed: { rotate: 0, y: 0 },
-    open: { rotate: -45, y: -6 },
+    open: { rotate: 45, y: -6 },
   };
 
   return (
@@ -46,17 +46,17 @@ export const MenuToggle = ({ setIsMenuOpen, isMenuOpen }) => {
         />
         {/* Middle line */}
         <motion.line
-          x1="4"
+          x1="12"
           y1="12"
-          x2="16"
+          x2="20"
           y2="12"
           variants={middleVariants}
-          transition={{ duration: 0.3 }}
+          transition={{ duration: 0.5 }}
           strokeLinecap="round"
         />
         {/* Bottom line */}
         <motion.line
-          x1="4"
+          x1={isMenuOpen ? "4" : "8"}
           y1="18"
           x2="20"
           y2="18"

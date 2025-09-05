@@ -5,8 +5,7 @@ export function AboutPage() {
   return (
     <div className="bg-white text-gray-900">
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-blue-900 to-blue-700 text-white py-20 text-center relative">
-        <div className="absolute inset-0 opacity-20 bg-[url('/images/real-estate-bg.jpg')] bg-cover bg-center"></div>
+      <section className="bg-gradient-to-r from-blue-50 to-blue-50 text-blue-800 py-20 text-center relative">
         <div className="relative container mx-auto px-6">
           <h1 className="text-4xl md:text-5xl font-bold mb-4 text-gold">
             About <span className="text-yellow-400">SR Developer's</span>
@@ -101,16 +100,16 @@ export function AboutPage() {
           </p>
           <div className="flex justify-center space-x-4">
             <a
-              href="/search"
+              href="/properties"
               className="bg-yellow-400 text-blue-900 px-6 py-3 rounded font-semibold shadow hover:bg-yellow-300 transition"
             >
               Explore Properties
             </a>
             <a
-              href="/post-property"
+              href="/contact"
               className="bg-white text-blue-900 px-6 py-3 rounded font-semibold shadow hover:bg-gray-100 transition"
             >
-              Post Your Property
+              Contact
             </a>
           </div>
         </div>
